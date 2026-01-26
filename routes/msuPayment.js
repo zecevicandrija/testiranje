@@ -90,7 +90,7 @@ router.post('/create-session', async (req, res) => {
             merchantPaymentId,
             amount: totalAmount,
             orderItems,
-            returnUrl: 'http://https://api.motionakademija.com/api/msu/callback-redirect'
+            returnUrl: 'https://api.motionakademija.com/api/msu/callback-redirect'
         };
 
         // Koristi CIT session za automatic recurring payments
