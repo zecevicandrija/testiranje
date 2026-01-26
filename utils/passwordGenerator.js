@@ -1,21 +1,13 @@
-// backend/utils/passwordGenerator.js
-function generateRandomPassword(length = 15) {
-    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
-    const numbers = '0123456789';
-    const allChars = uppercase + lowercase + numbers;
-
+/**
+ * Helper function to generate random password
+ */
+function generateRandomPassword(length = 12) {
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
     let password = '';
-    password += uppercase[Math.floor(Math.random() * uppercase.length)];
-    password += lowercase[Math.floor(Math.random() * lowercase.length)];
-    password += numbers[Math.floor(Math.random() * numbers.length)];
-
-    for (let i = 3; i < length; i++) {
-        password += allChars[Math.floor(Math.random() * allChars.length)];
+    for (let i = 0; i < length; i++) {
+        password += charset.charAt(Math.floor(Math.random() * charset.length));
     }
-
-    // Protresemo string da početni karakteri ne budu uvek istim redosledom
-    return password.split('').sort(() => 0.5 - Math.random()).join('');
+    return password;
 }
 
 module.exports = generateRandomPassword;

@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const db = require('../db');
+const authMiddleware = require('../middleware/token');
+const checkSubscription = require('../middleware/checkSubscription');
 // Uvozimo ispravne funkcije iz našeg Bunny.js helpera
 const { createVideo, uploadVideo, getSecurePlayerUrl, createUploadCredentials } = require('../utils/bunny');
 
@@ -98,8 +100,9 @@ router.put('/:id', upload.single('video'), async (req, res) => {
     }
 });
 
-// --- RUTA: Dobijanje sigurnog linka za video (NEMA IZMENA) ---
-router.get('/:id/stream', async (req, res) => {
+// --- RUTA: Dobijanje sigurnog linka za video ---
+// ZAŠTIĆENA RUTA - Provera subscription-a!
+router.get('/:id/stream', authMiddleware, checkSubscription, async (req, res) => {
     try {
         const { id } = req.params;
         const [lekcije] = await db.query('SELECT video_url FROM lekcije WHERE id = ?', [id]);

@@ -34,21 +34,21 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Email i šifra su obavezni.' });
         }
 
-        // 2. Ažuriramo upit da formatira datum radi kompatibilnosti sa JavaScript-om
-        const query = 'SELECT id, ime, prezime, email, sifra, uloga, DATE_FORMAT(subscription_expires_at, "%Y-%m-%dT%H:%i:%sZ") as subscription_expires_at FROM korisnici WHERE email = ?';
+        // 2. Dohvatamo sve podatke uključujući subscription_expires_at
+        const query = 'SELECT id, ime, prezime, email, sifra, uloga, subscription_expires_at FROM korisnici WHERE email = ?';
         const [results] = await db.query(query, [email]);
 
         if (results.length === 0) {
             return res.status(401).json({ message: 'Pogrešni kredencijali.' });
         }
-        
+
         const user = results[0];
         const isMatch = await bcrypt.compare(sifra, user.sifra);
 
         if (!isMatch) {
             return res.status(401).json({ message: 'Pogrešni kredencijali.' });
         }
-        
+
         // 3. Kreiramo JWT token
         const token = jwt.sign(
             { id: user.id, uloga: user.uloga }, // Podaci koje čuvamo u tokenu
@@ -57,7 +57,7 @@ router.post('/login', async (req, res) => {
         );
 
         const { sifra: userPassword, ...userWithoutPassword } = user;
-        
+
         // 4. Šaljemo i korisnika i token nazad frontendu
         res.status(200).json({ user: userWithoutPassword, token: token });
 
@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', authMiddleware, async (req, res) => {
     try {
         // req.user.id dolazi iz authMiddleware-a
-        const query = 'SELECT id, ime, prezime, email, uloga, DATE_FORMAT(subscription_expires_at, "%Y-%m-%dT%H:%i:%sZ") as subscription_expires_at FROM korisnici WHERE id = ?';
+        const query = 'SELECT id, ime, prezime, email, uloga, subscription_expires_at FROM korisnici WHERE id = ?';
         const [users] = await db.query(query, [req.user.id]);
 
         if (users.length === 0) {

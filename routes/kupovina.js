@@ -1,11 +1,22 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../db');
+const authMiddleware = require('../middleware/token');
 
 // Endpoint to fetch purchased courses for a user
-router.get('/user/:korisnikId', async (req, res) => {
+// Korisnik treba da VIDI svoje kurseve čak i kada je subscription istekao
+router.get('/user/:korisnikId', authMiddleware, async (req, res) => {
     try {
         const korisnikId = req.params.korisnikId;
+
+        // Dodatna provera - korisnik može da vidi samo SVOJE kurseve
+        if (req.user.id != korisnikId && req.user.uloga !== 'admin') {
+            return res.status(403).json({
+                error: 'Forbidden',
+                message: 'Možete videti samo svoje kurseve'
+            });
+        }
+
         // Ažuriran upit da dohvati i 'is_subscription' informaciju
         const query = `
             SELECT k.*, p.datum_kupovine, k.is_subscription, p.price_id 
@@ -19,6 +30,8 @@ router.get('/user/:korisnikId', async (req, res) => {
   )
         `;
         const [results] = await db.query(query, [korisnikId]);
+
+        // Vrati array kurseva direktno (za kompatibilnost sa frontend-om)
         res.status(200).json(results);
     } catch (err) {
         console.error('Database error:', err);
@@ -130,7 +143,7 @@ router.get('/statistika/:kursId', async (req, res) => {
         // Izračunavanje ukupnih vrednosti
         const totalSales = kupovine.length;
         const totalRevenue = kupovine.reduce((sum, kupovina) => sum + Number(kupovina.cena_sa_popustom), 0);
-        
+
         // Priprema podataka za chart
         const salesByDate = {};
         kupovine.forEach(k => {

@@ -15,10 +15,12 @@ const komentariRouter = require('./routes/komentari');
 const kompletirane_lekcijeRouter = require('./routes/kompletirane_lekcije');
 const popustiRouter = require('./routes/popusti');
 const rezultatiKvizaRouter = require('./routes/rezultati_kviza');
-const webhooksRouter = require('./routes/webhooks');
 const sekcijeRouter = require('./routes/sekcije');
-const paddlePaylinkRouter = require('./routes/paddlePaylink');
+// Paddle removed - using MSU/Chipcard payments
 const adminRouter = require('./routes/admin');
+const msuPaymentRouter = require('./routes/msuPayment');
+const subscriptionStatusRouter = require('./routes/subscriptionStatus');
+const subscriptionRenewalRouter = require('./routes/subscriptionRenewal');
 
 const app = express();
 const port = process.env.PORT || 5000;
@@ -33,9 +35,6 @@ const allowedOrigins = [
     'http://localhost:3000'
 ];
 app.use(cors({ origin: allowedOrigins }));
-
-// 2. PRVO: Webhook ruta sa raw body parserom (MORA biti pre express.json!)
-app.use('/api/webhooks', express.raw({ type: 'application/json' }), webhooksRouter);
 
 // 3. ZATIM: JSON parser za sve ostale rute
 app.use(express.json());
@@ -54,11 +53,24 @@ app.use('/api/kompletirane_lekcije', kompletirane_lekcijeRouter);
 app.use('/api/popusti', popustiRouter);
 app.use('/api/rezultati_kviza', rezultatiKvizaRouter);
 app.use('/api/sekcije', sekcijeRouter);
-app.use('/api/paddle', paddlePaylinkRouter);
+// Paddle route removed - using MSU/Chipcard payments via /api/msu
 app.use('/api/admin', adminRouter);
+app.use('/api/msu', msuPaymentRouter);
+app.use('/api/subscription', subscriptionStatusRouter);
+app.use('/api/subscription', subscriptionRenewalRouter);
+
+// === Cron Jobs ===
+const { startSubscriptionCleanupJob } = require('./jobs/subscriptionCleanup');
+const { startAutoRenewalJob } = require('./jobs/autoRenewalCron');
 
 // Start server
 const server = app.listen(port, () => {
     console.log(`Server running on port ${port}`);
+
+    // Pokreni subscription cleanup job
+    startSubscriptionCleanupJob();
+
+    // Pokreni auto renewal job
+    startAutoRenewalJob();
 });
 server.timeout = 1800000;

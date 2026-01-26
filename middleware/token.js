@@ -2,11 +2,11 @@
 const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
-    // EXEMPT PATHS: dodaj sve rute koje Paddle koristi (webhooks, paylink endpoint itd.)
+    // EXEMPT PATHS: rute koje ne zahtevaju autorizaciju
     const openPaths = [
-      '/api/webhooks',        // tvoj webhook endpoint
-      '/api/paddle/paylink',  // primer endpointa koji generiše paylink/JWT
-      // dodaj druge rute ako koristiš
+        '/api/webhooks',           // webhook endpoints
+        '/api/msu/callback',       // MSU/Chipcard payment callbacks
+        // dodaj druge rute ako koristiš
     ];
 
     // Ako putanja započinje nekom od exempt pathova, preskoči autorizaciju

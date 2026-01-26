@@ -30,7 +30,7 @@ router.post('/create', async (req, res) => {
 
         const query = 'INSERT INTO popusti (kod, procenat) VALUES (?, ?)';
         await db.query(query, [code, discountPercent]);
-        
+
         res.status(201).json({ success: true, message: 'Popust kod je uspešno kreiran.' });
     } catch (error) {
         if (error.code === 'ER_DUP_ENTRY') {
@@ -45,26 +45,35 @@ router.post('/create', async (req, res) => {
 router.post('/validate', async (req, res) => {
     try {
         const { code } = req.body;
+
+        if (!code || !code.trim()) {
+            return res.status(400).json({
+                success: false,
+                message: 'Kod popusta je obavezan.'
+            });
+        }
+
         const query = 'SELECT * FROM popusti WHERE kod = ?';
-        const [results] = await db.query(query, [code]);
+        const [results] = await db.query(query, [code.trim().toUpperCase()]);
 
         if (results.length === 0) {
-            return res.json({
-                valid: false,
+            return res.status(400).json({
+                success: false,
                 message: 'Neispravan kod za popust.'
             });
         }
-        
+
         const discount = results[0];
         res.json({
-            valid: true,
+            success: true,
             discountPercent: discount.procenat,
             discountId: discount.id,
+            code: discount.kod
         });
 
     } catch (error) {
         console.error('Error validating discount code:', error);
-        res.status(500).send('Internal server error');
+        res.status(500).json({ success: false, message: 'Greška pri validaciji koda.' });
     }
 });
 
