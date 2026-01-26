@@ -77,9 +77,12 @@ router.post('/create-session', async (req, res) => {
             });
         }
 
-        // Generiši jedinstveni merchantPaymentId
-        const customerIdentifier = korisnikId || customerEmail;
-        const merchantPaymentId = `ORDER_${Date.now()}_${Buffer.from(String(customerIdentifier)).toString('base64').substring(0, 10)}_${itemId}`;
+        // Generiši kraći jedinstveni merchantPaymentId (max 20 karaktera za Intesa/Raiffeisen)
+        // Format: ORD-{timestamp poslednjih 9 cifara}-{random 3 karaktera}
+        // Primer: ORD-173792012-ABC
+        const timestamp = Date.now().toString().slice(-9);
+        const randomChars = Math.random().toString(36).substring(2, 5).toUpperCase();
+        const merchantPaymentId = `ORD-${timestamp}-${randomChars}`;
 
         // Kreiranje CIT MSU session tokena (za recurring payments)
         const sessionData = {

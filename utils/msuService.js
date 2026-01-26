@@ -221,7 +221,7 @@ async function createCITSession(orderData) {
         RETURNURL: returnUrl,
         SESSIONEXPIRY: '1h',
         ORDERITEMS: JSON.stringify(orderItems),
-        EXTRA: encodeURI(JSON.stringify(extraParams))
+        EXTRA: JSON.stringify(extraParams)
     });
 
     try {
@@ -278,7 +278,7 @@ async function executeMITSale(params) {
         CURRENCY: 'RSD',
         RETURNURL: returnUrl,
         CARDTOKEN: cardToken,
-        EXTRA: encodeURI(JSON.stringify(extraParams))
+        EXTRA: JSON.stringify(extraParams)
     });
 
     try {
