@@ -257,7 +257,7 @@ async function executeMITSale(params) {
         amount,
         cardToken,
         traceID,
-        returnUrl = 'https://api.motionakademija.com/api/msu/callback'
+        returnUrl = 'http://https://api.motionakademija.com/api/msu/callback'
     } = params;
 
     // MIT EXTRA: Recurring:R + RecurringType:Subscription + TraceID
