@@ -157,14 +157,18 @@ router.post('/create-session', async (req, res) => {
 });
 
 /**
- * POST /api/msu/callback-redirect
- * Receives POST callback from MSU, processes payment, and redirects to frontend
+ * GET + POST /api/msu/callback-redirect
+ * Receives callback from MSU (supports both GET and POST), processes payment, and redirects to frontend
  */
-router.post('/callback-redirect', async (req, res) => {
+router.all('/callback-redirect', async (req, res) => {
     try {
-        const responseData = req.body;
+        // Support both GET (query params) and POST (body) from 3D Secure
+        const responseData = { ...req.query, ...req.body };
         console.log('=== MSU Callback Redirect received ===');
-        console.log('Response data:', JSON.stringify(responseData, null, 2));
+        console.log('Method:', req.method);
+        console.log('Query params:', JSON.stringify(req.query, null, 2));
+        console.log('Body:', JSON.stringify(req.body, null, 2));
+        console.log('Merged response data:', JSON.stringify(responseData, null, 2));
 
         const merchantPaymentId = responseData.merchantPaymentId;
         const responseCode = responseData.responseCode;
