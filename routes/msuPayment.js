@@ -272,15 +272,22 @@ router.all('/callback-redirect', async (req, res) => {
             }
         }
 
-        // Merge: stari podaci + novi callback podaci
+        // ⚠️ KRITIČNO: Merge OBRNUTO - callback podaci prvo, pa originals preko njih!
+        // Ovo osigurava da customerEmail, customerName, packageData NIKAD ne budu overwrite-ovani
         const mergedRawData = {
-            ...existingRawData,  // Čuva customerEmail, customerName, packageData
-            ...responseData      // Dodaje pgTranId, cardToken, bankResponseExtras, itd.
+            ...responseData,      // Callback podaci (pgTranId, cardToken, bankResponseExtras...)
+            // Originals overwrite-uju sve što je možda prazno u callback-u
+            customerEmail: existingRawData.customerEmail || responseData.customerEmail,
+            customerName: existingRawData.customerName || responseData.customerName,
+            itemType: existingRawData.itemType,
+            packageData: existingRawData.packageData
         };
 
         console.log('📦 Merged raw_response will contain:', {
             hasCustomerEmail: !!mergedRawData.customerEmail,
+            customerEmail: mergedRawData.customerEmail,
             hasCustomerName: !!mergedRawData.customerName,
+            customerName: mergedRawData.customerName,
             hasCardToken: !!mergedRawData.cardToken,
             hasBankResponseExtras: !!mergedRawData.bankResponseExtras
         });
@@ -393,10 +400,22 @@ router.all('/callback-redirect', async (req, res) => {
 
                             // Pošalji welcome email sa šifrom
                             try {
-                                await sendMsuWelcomeEmail(customerEmail, password, ime);
-                                console.log(`✅ Welcome email sent to ${customerEmail}`);
+                                console.log('📧 Attempting to send welcome email...');
+                                console.log(`   To: ${customerEmail}`);
+                                console.log(`   Name: ${ime}`);
+                                console.log(`   Has RESEND_API_KEY: ${!!process.env.RESEND_API_KEY}`);
+
+                                const emailResult = await sendMsuWelcomeEmail(customerEmail, password, ime);
+
+                                if (emailResult) {
+                                    console.log(`✅ Welcome email sent successfully to ${customerEmail}`);
+                                } else {
+                                    console.warn(`⚠️ Email function returned false for ${customerEmail}`);
+                                }
                             } catch (emailErr) {
-                                console.warn('⚠️ Failed to send welcome email:', emailErr);
+                                console.error('❌ Failed to send welcome email:');
+                                console.error('   Error:', emailErr.message);
+                                console.error('   Stack:', emailErr.stack);
                             }
                         }
 
