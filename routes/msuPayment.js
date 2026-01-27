@@ -254,7 +254,36 @@ router.all('/callback-redirect', async (req, res) => {
             status: transaction.status,
             korisnikId: transaction.korisnik_id
         });
+
         const status = responseCode === '00' ? 'APPROVED' : 'FAILED';
+
+        // ⚠️ VAŽNO: Merge existing raw_response with new responseData
+        // Ne smeš da prepišeš raw_response jer ćeš izgubiti customerEmail, customerName, packageData!
+        let existingRawData = {};
+        if (transaction.raw_response) {
+            if (typeof transaction.raw_response === 'string') {
+                try {
+                    existingRawData = JSON.parse(transaction.raw_response);
+                } catch (err) {
+                    console.warn('Failed to parse existing raw_response:', err);
+                }
+            } else {
+                existingRawData = transaction.raw_response;
+            }
+        }
+
+        // Merge: stari podaci + novi callback podaci
+        const mergedRawData = {
+            ...existingRawData,  // Čuva customerEmail, customerName, packageData
+            ...responseData      // Dodaje pgTranId, cardToken, bankResponseExtras, itd.
+        };
+
+        console.log('📦 Merged raw_response will contain:', {
+            hasCustomerEmail: !!mergedRawData.customerEmail,
+            hasCustomerName: !!mergedRawData.customerName,
+            hasCardToken: !!mergedRawData.cardToken,
+            hasBankResponseExtras: !!mergedRawData.bankResponseExtras
+        });
 
         // Ažuriraj transakciju
         await db.query(
@@ -270,7 +299,7 @@ router.all('/callback-redirect', async (req, res) => {
                 status,
                 responseCode,
                 responseMsg,
-                JSON.stringify(responseData),
+                JSON.stringify(mergedRawData),  // ✅ Merge-ovani podaci
                 merchantPaymentId
             ]
         );
@@ -282,17 +311,11 @@ router.all('/callback-redirect', async (req, res) => {
             // Ako je guest checkout (korisnik_id je NULL)
             if (!userId) {
                 try {
-                    // raw_response može biti objekat ili JSON string
-                    let rawData;
-                    if (typeof transaction.raw_response === 'string') {
-                        rawData = JSON.parse(transaction.raw_response);
-                    } else {
-                        rawData = transaction.raw_response || {};
-                    }
-                    const customerEmail = rawData.customerEmail;
-                    const customerName = rawData.customerName || 'Korisnik';
+                    // ✅ Koristi mergedRawData koji je upravo kreiran i ima sve podatke
+                    const customerEmail = mergedRawData.customerEmail;
+                    const customerName = mergedRawData.customerName || 'Korisnik';
 
-                    console.log('Processing guest checkout for:', customerEmail);
+                    console.log('🔍 Processing guest checkout for:', customerEmail);
 
                     if (customerEmail) {
                         // Proveri da li user već postoji
@@ -309,10 +332,10 @@ router.all('/callback-redirect', async (req, res) => {
                             const now = new Date();
                             let subscriptionMonths = 1;
 
-                            if (rawData.packageData && rawData.packageData.id) {
-                                if (rawData.packageData.id.includes('3M')) {
+                            if (mergedRawData.packageData && mergedRawData.packageData.id) {
+                                if (mergedRawData.packageData.id.includes('3M')) {
                                     subscriptionMonths = 3;
-                                } else if (rawData.packageData.id.includes('1M')) {
+                                } else if (mergedRawData.packageData.id.includes('1M')) {
                                     subscriptionMonths = 1;
                                 }
                             }
@@ -338,11 +361,11 @@ router.all('/callback-redirect', async (req, res) => {
                             let subscriptionMonths = 1; // Default 1 mesec
 
                             // Provjeri package podatke da odrediš trajanje
-                            if (rawData.packageData && rawData.packageData.id) {
+                            if (mergedRawData.packageData && mergedRawData.packageData.id) {
                                 // STANDARD_1M = 1 mesec, PRO_3M = 3 meseca
-                                if (rawData.packageData.id.includes('3M')) {
+                                if (mergedRawData.packageData.id.includes('3M')) {
                                     subscriptionMonths = 3;
-                                } else if (rawData.packageData.id.includes('1M')) {
+                                } else if (mergedRawData.packageData.id.includes('1M')) {
                                     subscriptionMonths = 1;
                                 }
                             }
@@ -391,21 +414,13 @@ router.all('/callback-redirect', async (req, res) => {
             // ✅ VAŽNO: Ažuriraj subscription za SVE korisnike (nove i postojeće)
             if (userId && transaction.kurs_id) {
                 try {
-                    // Dohvati package podatke iz raw_response
-                    let rawData;
-                    if (typeof transaction.raw_response === 'string') {
-                        rawData = JSON.parse(transaction.raw_response);
-                    } else {
-                        rawData = transaction.raw_response || {};
-                    }
-
-                    // Odredi trajanje subscription-a
+                    // Odredi trajanje subscription-a iz mergedRawData
                     let subscriptionMonths = 1; // Default 1 mesec
 
-                    if (rawData.packageData && rawData.packageData.id) {
-                        if (rawData.packageData.id.includes('3M')) {
+                    if (mergedRawData.packageData && mergedRawData.packageData.id) {
+                        if (mergedRawData.packageData.id.includes('3M')) {
                             subscriptionMonths = 3;
-                        } else if (rawData.packageData.id.includes('1M')) {
+                        } else if (mergedRawData.packageData.id.includes('1M')) {
                             subscriptionMonths = 1;
                         }
                     }
@@ -487,19 +502,12 @@ router.all('/callback-redirect', async (req, res) => {
                     if (traceID) {
                         console.log('✅ TraceID found - creating recurring subscription...');
 
-                        // Dohvati subscription podatke
-                        let rawData;
-                        if (typeof transaction.raw_response === 'string') {
-                            rawData = JSON.parse(transaction.raw_response);
-                        } else {
-                            rawData = transaction.raw_response || {};
-                        }
-
+                        // Koristi mergedRawData za subscription podatke
                         let subscriptionMonths = 1;
-                        if (rawData.packageData && rawData.packageData.id) {
-                            if (rawData.packageData.id.includes('3M')) {
+                        if (mergedRawData.packageData && mergedRawData.packageData.id) {
+                            if (mergedRawData.packageData.id.includes('3M')) {
                                 subscriptionMonths = 3;
-                            } else if (rawData.packageData.id.includes('1M')) {
+                            } else if (mergedRawData.packageData.id.includes('1M')) {
                                 subscriptionMonths = 1;
                             }
                         }
