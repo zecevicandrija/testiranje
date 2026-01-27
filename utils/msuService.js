@@ -261,11 +261,11 @@ async function executeMITSale(params) {
     } = params;
 
     // MIT EXTRA: Recurring:R + RecurringType:Subscription + TraceID
-    // const extraParams = {
-    //     Recurring: 'R',  // R = Recurring (scheduled MIT)
-    //     RecurringType: 'Subscription',
-    //     TraceID: traceID
-    // };
+    const extraParams = {
+        Recurring: 'R',  // R = Recurring (scheduled MIT)
+        RecurringType: 'Subscription',
+        TraceID: traceID
+    };
 
     const postData = new URLSearchParams({
         ACTION: 'SALE',

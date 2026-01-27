@@ -167,19 +167,57 @@ router.all('/callback-redirect', async (req, res) => {
     try {
         // Support both GET (query params) and POST (body) from 3D Secure
         const responseData = { ...req.query, ...req.body };
-        console.log('=== MSU Callback Redirect received ===');
+
+        console.log('\n========================================');
+        console.log('=== MSU CALLBACK REDIRECT RECEIVED ===');
+        console.log('========================================');
+        console.log('Timestamp:', new Date().toISOString());
         console.log('Method:', req.method);
-        console.log('Query params:', JSON.stringify(req.query, null, 2));
-        console.log('Body:', JSON.stringify(req.body, null, 2));
-        console.log('Merged response data:', JSON.stringify(responseData, null, 2));
+        console.log('\n--- Request Headers ---');
+        console.log(JSON.stringify(req.headers, null, 2));
+        console.log('\n--- Query Params ---');
+        console.log(JSON.stringify(req.query, null, 2));
+        console.log('\n--- Body ---');
+        console.log(JSON.stringify(req.body, null, 2));
+        console.log('\n--- Merged Response Data ---');
+        console.log(JSON.stringify(responseData, null, 2));
+        console.log('========================================\n');
 
         const merchantPaymentId = responseData.merchantPaymentId;
         const responseCode = responseData.responseCode;
         const responseMsg = responseData.responseMsg;
 
         if (!merchantPaymentId) {
-            console.error('Missing merchantPaymentId in callback');
-            return res.redirect(`https://motionakademija.com/placanje/rezultat?error=missing_payment_id`);
+            console.error('❌ Missing merchantPaymentId in callback');
+            console.error('Available keys:', Object.keys(responseData));
+
+            // Pokušaj pronaći transakciju po drugim parametrima
+            let transaction = null;
+
+            if (responseData.pgTranId) {
+                console.log('Attempting to find by pgTranId:', responseData.pgTranId);
+                const [txns] = await db.query(
+                    'SELECT * FROM msu_transakcije WHERE pg_tran_id = ?',
+                    [responseData.pgTranId]
+                );
+                if (txns.length > 0) transaction = txns[0];
+            }
+
+            if (!transaction && responseData.sessionToken) {
+                console.log('Attempting to find by sessionToken:', responseData.sessionToken);
+                const [txns] = await db.query(
+                    'SELECT * FROM msu_transakcije WHERE session_token = ?',
+                    [responseData.sessionToken]
+                );
+                if (txns.length > 0) transaction = txns[0];
+            }
+
+            if (!transaction) {
+                return res.redirect(`https://motionakademija.com/placanje/rezultat?error=missing_payment_id`);
+            }
+
+            console.log('✅ Found transaction via fallback method:', transaction.merchant_payment_id);
+            // Continue processing with found transaction
         }
 
         // Pronađi transakciju u bazi
@@ -189,11 +227,33 @@ router.all('/callback-redirect', async (req, res) => {
         );
 
         if (transactions.length === 0) {
-            console.error('Transaction not found:', merchantPaymentId);
-            return res.redirect(`https://motionakademija.com/placanje/rezultat?error=transaction_not_found`);
+            console.error('❌ Transaction not found:', merchantPaymentId);
+            console.error('Attempting to query database for similar transactions...');
+
+            // Pokušaj pronaći bilo koju nedavnu pending transakciju
+            const [recentTxns] = await db.query(
+                `SELECT * FROM msu_transakcije 
+                WHERE status = 'PENDING' 
+                AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+                ORDER BY created_at DESC 
+                LIMIT 5`
+            );
+
+            console.log(`Found ${recentTxns.length} recent pending transactions:`);
+            recentTxns.forEach(tx => {
+                console.log(`  - ${tx.merchant_payment_id} (created: ${tx.created_at})`);
+            });
+
+            return res.redirect(`https://motionakademija.com/placanje/rezultat?error=transaction_not_found&id=${encodeURIComponent(merchantPaymentId)}`);
         }
 
         const transaction = transactions[0];
+        console.log('✅ Transaction found in database:', {
+            id: transaction.id,
+            merchantPaymentId: transaction.merchant_payment_id,
+            status: transaction.status,
+            korisnikId: transaction.korisnik_id
+        });
         const status = responseCode === '00' ? 'APPROVED' : 'FAILED';
 
         // Ažuriraj transakciju
@@ -511,6 +571,77 @@ router.all('/callback-redirect', async (req, res) => {
     } catch (error) {
         console.error('Error handling MSU callback redirect:', error);
         return res.redirect(`https://motionakademija.com/placanje/rezultat?error=server_error`);
+    }
+});
+
+/**
+ * POST /api/msu/callback
+ * MSU Notification Service callback (server-to-server)
+ * This is different from callback-redirect which is browser-based
+ */
+router.post('/callback', async (req, res) => {
+    try {
+        console.log('\n========================================');
+        console.log('=== MSU NOTIFICATION CALLBACK ===');
+        console.log('========================================');
+        console.log('Timestamp:', new Date().toISOString());
+        console.log('Body:', JSON.stringify(req.body, null, 2));
+        console.log('========================================\n');
+
+        const {
+            merchantBusinessId,
+            status,
+            merchantPaymentId,
+            amount,
+            notificationType,
+            transactionType,
+            pgTransactionId,
+            customer
+        } = req.body;
+
+        if (!merchantPaymentId) {
+            console.error('❌ Missing merchantPaymentId in notification callback');
+            return res.status(400).json({ error: 'merchantPaymentId is required' });
+        }
+
+        console.log(`📥 Notification: ${notificationType} for ${merchantPaymentId}`);
+
+        // Pronađi transakciju
+        const [transactions] = await db.query(
+            'SELECT * FROM msu_transakcije WHERE merchant_payment_id = ?',
+            [merchantPaymentId]
+        );
+
+        if (transactions.length === 0) {
+            console.error(`❌ Transaction not found: ${merchantPaymentId}`);
+            return res.status(404).json({ error: 'Transaction not found' });
+        }
+
+        const transaction = transactions[0];
+        console.log(`✅ Found transaction ID: ${transaction.id}`);
+
+        // Ažuriraj status transakcije
+        const msuStatus = status === 'AP' ? 'APPROVED' : 'FAILED';
+        await db.query(
+            `UPDATE msu_transakcije 
+            SET pg_tran_id = ?, status = ?, raw_response = ?, updated_at = NOW()
+            WHERE merchant_payment_id = ?`,
+            [
+                pgTransactionId,
+                msuStatus,
+                JSON.stringify(req.body),
+                merchantPaymentId
+            ]
+        );
+
+        console.log(`✅ Transaction ${merchantPaymentId} updated to status: ${msuStatus}`);
+
+        // Vrati success response serveru MSU
+        return res.status(200).json({ success: true, message: 'Notification received' });
+
+    } catch (error) {
+        console.error('❌ Error handling MSU notification callback:', error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
 });
 
