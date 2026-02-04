@@ -87,7 +87,7 @@ async function sendMsuWelcomeEmail(toEmail, plainPassword, firstName = 'Korisnik
                       <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
                         <tr>
                           <td align="center">
-                            <a href="https://motionakademija.com/login" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(255,69,0,0.3);text-transform:uppercase;">
+                            <a href="https://localhost:3000/login" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #ff4500 0%, #ff6b35 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(255,69,0,0.3);text-transform:uppercase;">
                               🚀 Prijavite se sada
                             </a>
                           </td>
@@ -132,7 +132,7 @@ async function sendMsuWelcomeEmail(toEmail, plainPassword, firstName = 'Korisnik
                         © 2026 Motion Akademija. Sva prava zadržana.
                       </p>
                       <p style="margin:0;color:#555;font-size:12px;">
-                        <a href="https://motionakademija.com" style="color:#ff4500;text-decoration:none;">motionakademija.com</a>
+                        <a href="https://localhost:3000" style="color:#ff4500;text-decoration:none;">localhost:3000</a>
                       </p>
                     </td>
                   </tr>
@@ -148,7 +148,7 @@ async function sendMsuWelcomeEmail(toEmail, plainPassword, firstName = 'Korisnik
     `;
 
     await resend.emails.send({
-      from: 'MotionAkademija <office@motionakademija.com>',
+      from: 'MotionAkademija <office@localhost:3000>',
       to: toEmail,
       subject: 'Dobrodošli - Vaš nalog je kreiran!',
       html
@@ -257,7 +257,7 @@ async function sendSubscriptionRenewalEmail(toEmail, firstName, newExpiryDate, a
                       <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
                         <tr>
                           <td align="center">
-                            <a href="https://motionakademija.com/profil" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(34,193,195,0.3);text-transform:uppercase;">
+                            <a href="https://localhost:3000/profil" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #22c1c3 0%, #fdbb2d 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(34,193,195,0.3);text-transform:uppercase;">
                               🚀 Pogledaj Profil
                             </a>
                           </td>
@@ -285,7 +285,7 @@ async function sendSubscriptionRenewalEmail(toEmail, firstName, newExpiryDate, a
                         © 2026 Motion Akademija. Sva prava zadržana.
                       </p>
                       <p style="margin:0;color:#555;font-size:12px;">
-                        <a href="https://motionakademija.com" style="color:#22c1c3;text-decoration:none;">motionakademija.com</a>
+                        <a href="https://localhost:3000" style="color:#22c1c3;text-decoration:none;">localhost:3000</a>
                       </p>
                     </td>
                   </tr>
@@ -301,7 +301,7 @@ async function sendSubscriptionRenewalEmail(toEmail, firstName, newExpiryDate, a
     `;
 
     await resend.emails.send({
-      from: 'MotionAkademija <office@motionakademija.com>',
+      from: 'MotionAkademija <office@localhost:3000>',
       to: toEmail,
       subject: '✅ Vaša pretplata je produžena!',
       html
@@ -359,7 +359,7 @@ async function sendSubscriptionPaymentFailedEmail(toEmail, firstName) {
                       <table width="100%" cellpadding="0" cellspacing="0" style="margin:30px 0;">
                         <tr>
                           <td align="center">
-                            <a href="https://motionakademija.com/produzivanje" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #ff4500 0%, #dc143c 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(255,69,0,0.3);text-transform:uppercase;">
+                            <a href="https://localhost:3000/produzivanje" style="display:inline-block;padding:16px 40px;background:linear-gradient(135deg, #ff4500 0%, #dc143c 100%);color:#fff;text-decoration:none;border-radius:12px;font-size:16px;font-weight:700;letter-spacing:0.5px;box-shadow:0 10px 30px rgba(255,69,0,0.3);text-transform:uppercase;">
                               Obnovi Pretplatu
                             </a>
                           </td>
@@ -383,7 +383,7 @@ async function sendSubscriptionPaymentFailedEmail(toEmail, firstName) {
     `;
 
     await resend.emails.send({
-      from: 'MotionAkademija <office@motionakademija.com>',
+      from: 'MotionAkademija <office@localhost:3000>',
       to: toEmail,
       subject: '⚠️ Problem sa plaćanjem pretplate',
       html

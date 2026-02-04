@@ -29,8 +29,7 @@ const port = process.env.PORT || 5000;
 
 // 1. CORS se primenjuje na sve zahteve, pa ide prvi
 const allowedOrigins = [
-    'https://motionakademija.com',
-    'https://api.motionakademija.com',
+    'https://test-api.zecevicdev.com',
     'https://localhost:5000',
     'http://localhost:3000'
 ];

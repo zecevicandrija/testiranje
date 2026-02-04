@@ -93,7 +93,7 @@ router.post('/create-session', async (req, res) => {
             merchantPaymentId,
             amount: totalAmount,
             orderItems,
-            returnUrl: 'https://api.motionakademija.com/api/msu/callback-redirect'
+            returnUrl: 'https://test-api.zecevicdev.com/api/msu/callback-redirect'
         };
 
         // Koristi CIT session za automatic recurring payments
@@ -213,7 +213,7 @@ router.all('/callback-redirect', async (req, res) => {
             }
 
             if (!transaction) {
-                return res.redirect(`https://motionakademija.com/placanje/rezultat?error=missing_payment_id`);
+                return res.redirect(`https://localhost:3000/placanje/rezultat?error=missing_payment_id`);
             }
 
             console.log('✅ Found transaction via fallback method:', transaction.merchant_payment_id);
@@ -244,7 +244,7 @@ router.all('/callback-redirect', async (req, res) => {
                 console.log(`  - ${tx.merchant_payment_id} (created: ${tx.created_at})`);
             });
 
-            return res.redirect(`https://motionakademija.com/placanje/rezultat?error=transaction_not_found&id=${encodeURIComponent(merchantPaymentId)}`);
+            return res.redirect(`https://localhost:3000/placanje/rezultat?error=transaction_not_found&id=${encodeURIComponent(merchantPaymentId)}`);
         }
 
         const transaction = transactions[0];
@@ -589,15 +589,15 @@ router.all('/callback-redirect', async (req, res) => {
 
 
             // Redirect na profil stranicu
-            return res.redirect(`https://motionakademija.com/profil?payment=success`);
+            return res.redirect(`https://localhost:3000/profil?payment=success`);
         } else {
             // Plaćanje nije uspelo
-            return res.redirect(`https://motionakademija.com/placanje/rezultat?merchantPaymentId=${merchantPaymentId}&status=failed&message=${encodeURIComponent(responseMsg)}`);
+            return res.redirect(`https://localhost:3000/placanje/rezultat?merchantPaymentId=${merchantPaymentId}&status=failed&message=${encodeURIComponent(responseMsg)}`);
         }
 
     } catch (error) {
         console.error('Error handling MSU callback redirect:', error);
-        return res.redirect(`https://motionakademija.com/placanje/rezultat?error=server_error`);
+        return res.redirect(`https://localhost:3000/placanje/rezultat?error=server_error`);
     }
 });
 
