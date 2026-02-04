@@ -1,0 +1,315 @@
+/* Testimonijal.module.css */
+
+.section {
+    position: relative;
+    padding: 100px 0 140px 0;
+    overflow: hidden;
+    /* Pozadina je definisana globalno, ovde dodajemo samo overlay */
+}
+
+/* --- AMBIJENT --- */
+
+.bgGlow {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at center, rgba(255, 69, 0, 0.05) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* --- HEADER --- */
+
+.header {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 5;
+}
+
+/* Naslovi se nasleđuju iz globalnih stilova, ali ih ovde preciziramo */
+.header h2 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: white;
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+}
+
+.header p {
+    color: #888;
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* --- CAROUSEL LAYOUT --- */
+
+.carouselWrapper {
+    position: relative;
+    width: 100%;
+    max-width: 1400px; /* Malo šire da kartice dišu */
+    margin: 0 auto;
+    padding: 0 20px; /* Safe area za strelice na desktopu */
+}
+
+.trackContainer {
+    overflow: hidden;
+    padding: 20px 0 40px 0; /* Padding gore/dole za hover efekte i senke */
+    margin: -20px 0 -40px 0; /* Negativna margina da kompenzuje padding */
+}
+
+.track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
+    width: 100%;
+}
+
+.cardWrapper {
+    padding: 0 15px; /* Razmak između kartica */
+    box-sizing: border-box;
+}
+
+/* --- TECH CARD DESIGN --- */
+
+.card {
+    position: relative;
+    background: rgba(18, 18, 20, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 4px; /* Oštrije ivice za tech look */
+    padding: 2.5rem 2rem;
+    height: 100%;
+    min-height: 380px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s ease;
+    /* Tech clip-path - odsečen donji desni ugao */
+    clip-path: polygon(
+        0 0, 
+        100% 0, 
+        100% calc(100% - 20px), 
+        calc(100% - 20px) 100%, 
+        0 100%
+    );
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    background: rgba(25, 25, 28, 0.8);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Neon Borders */
+.cardBorderTop {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--narandzasta, #ff4500), transparent);
+    opacity: 0.5;
+    transition: opacity 0.3s;
+}
+
+.cardBorderBottom {
+    position: absolute;
+    bottom: 0; right: 0;
+    width: 40px; height: 2px;
+    background: var(--narandzasta, #ff4500);
+    box-shadow: 0 0 10px var(--narandzasta, #ff4500);
+}
+
+.card:hover .cardBorderTop {
+    opacity: 1;
+}
+
+/* Quote Icon */
+.quoteIcon {
+    font-size: 3rem;
+    color: var(--narandzasta, #ff4500);
+    opacity: 0.2;
+    margin-bottom: 1.5rem;
+}
+
+/* Text Content */
+.text {
+    font-size: 1.05rem;
+    line-height: 1.7;
+    color: #ccc;
+    font-style: italic;
+    margin-bottom: 2rem;
+    flex-grow: 1; /* Gura autora na dno */
+    font-weight: 300;
+}
+
+/* Rating */
+.stars {
+    display: flex;
+    gap: 4px;
+    color: #ffb700; /* Zlatna za zvezdice */
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    filter: drop-shadow(0 0 5px rgba(255, 183, 0, 0.3));
+}
+
+/* Author Section */
+.author {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+/* Tech Avatar */
+.avatarWrapper {
+    position: relative;
+    width: 50px;
+    height: 50px;
+}
+
+.avatarWrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: grayscale(0.5); /* Malo desaturisano za ozbiljnost */
+    transition: filter 0.3s;
+}
+
+.card:hover .avatarWrapper img {
+    filter: grayscale(0);
+}
+
+/* Rotirajući prsten oko avatara */
+.avatarRing {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px dashed rgba(255, 69, 0, 0.5);
+    animation: rotateRing 10s linear infinite;
+}
+
+@keyframes rotateRing {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.authorInfo h4 {
+    color: white;
+    font-size: 1rem;
+    font-weight: 700;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.authorInfo span {
+    font-size: 0.8rem;
+    color: var(--narandzasta, #ff4500);
+    font-weight: 600;
+}
+
+/* --- NAVIGATION BUTTONS --- */
+
+.navButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    background: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 10;
+    backdrop-filter: blur(5px);
+    /* Tech shape */
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.navButton.prev { left: -10px; }
+.navButton.next { right: -10px; }
+
+.navButton:hover:not(:disabled) {
+    background: var(--narandzasta, #ff4500);
+    border-color: var(--narandzasta, #ff4500);
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.4);
+}
+
+.navButton:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: transparent;
+}
+
+/* --- PROGRESS BAR --- */
+
+.progressBar {
+    width: 100%;
+    max-width: 300px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.1);
+    margin: 3rem auto 0 auto;
+    position: relative;
+    border-radius: 2px;
+    overflow: hidden;
+}
+
+.progressFill {
+    height: 100%;
+    background: var(--narandzasta, #ff4500);
+    box-shadow: 0 0 10px var(--narandzasta, #ff4500);
+    transition: width 0.6s ease;
+}
+
+/* --- RESPONSIVE --- */
+
+@media (max-width: 1024px) {
+    .navButton {
+        width: 40px; height: 40px;
+        font-size: 1.2rem;
+    }
+    .navButton.prev { left: 0; }
+    .navButton.next { right: 0; }
+}
+
+@media (max-width: 768px) {
+    .section {
+        padding: 80px 0;
+    }
+
+    .carouselWrapper {
+        padding: 0;
+    }
+
+    .card {
+        padding: 2rem 1.5rem;
+        min-height: 350px;
+    }
+
+    /* Na mobilnom sakrivamo side dugmad i koristimo swipe (ako se doda) 
+       ili ih stavljamo dole. Ovde ih ostavljamo, ali prilagođavamo poziciju */
+    
+    .navButton {
+        top: auto;
+        bottom: -70px; /* Spuštanje ispod kartica */
+        transform: none;
+    }
+    
+    .navButton.prev { left: 30%; }
+    .navButton.next { right: 30%; }
+
+    .progressBar {
+        margin-top: 5rem; /* Više mesta zbog dugmadi */
+    }
+}

@@ -13,7 +13,7 @@ const KursLista = () => {
 
     const fetchKursevi = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/kursevi');
+            const response = await fetch('https://test-api.zecevicdev.com/api/kursevi');
             if (response.ok) {
                 const data = await response.json();
                 setKursevi(data);
@@ -27,7 +27,7 @@ const KursLista = () => {
 
     const fetchAverageRating = async (kursId) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/ratings/average/${kursId}`);
+            const response = await fetch(`https://test-api.zecevicdev.com/api/ratings/average/${kursId}`);
             if (response.ok) {
                 const data = await response.json();
                 return data.averageRating;
@@ -43,7 +43,7 @@ const KursLista = () => {
 
     const fetchPopularity = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/kupovina/popularity');
+            const response = await fetch('https://test-api.zecevicdev.com/api/kupovina/popularity');
             if (response.ok) {
                 const data = await response.json();
                 const popularityMap = {};
@@ -61,7 +61,7 @@ const KursLista = () => {
 
     const fetchInstruktori = async () => {
         try {
-            const response = await fetch('http://localhost:5000/api/korisnici');
+            const response = await fetch('https://test-api.zecevicdev.com/api/korisnici');
             if (response.ok) {
                 const data = await response.json();
                 const instructors = {};
@@ -125,10 +125,10 @@ const KursLista = () => {
     return (
         <div className="kurs-container">
             <h2 className="title">Lista Kurseva</h2>
-            <input 
-                type="text" 
-                className="search-input" 
-                placeholder="Pretraži kurseve..." 
+            <input
+                type="text"
+                className="search-input"
+                placeholder="Pretraži kurseve..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -137,50 +137,50 @@ const KursLista = () => {
                     Ocena ↿⇂
                 </button>
                 <button onClick={() => setSortOrder('asc')}>
-                Ocena ⇃↾
+                    Ocena ⇃↾
                 </button>
                 <button onClick={() => setSortOrder('popularity')}>
                     Popularnost ↿⇂
                 </button>
                 <button onClick={() => setSortOrder('none')}>
-                <i class="ri-close-large-line"></i>
+                    <i class="ri-close-large-line"></i>
                 </button>
             </div>
             <div className="kurs-lista">
                 {filteredKursevi.map(kurs => (
                     <Link to={`/kurs/${kurs.id}`} className="kurs-card" key={kurs.id}>
-    <div className="kurs-slika-wrapper">
-        {kurs.slika && (
-            <img src={kurs.slika} alt={kurs.naziv} className="kurs-slika" />
-        )}
-    </div>
-    <div className="kurs-card-content">
-        <p className="kurs-naziv">{kurs.naziv}</p>
-        <p className="kurs-instruktor">
-            <i className="ri-user-fill"></i> {instruktori[String(kurs.instruktor_id)] || 'Nepoznat'}
-        </p>
+                        <div className="kurs-slika-wrapper">
+                            {kurs.slika && (
+                                <img src={kurs.slika} alt={kurs.naziv} className="kurs-slika" />
+                            )}
+                        </div>
+                        <div className="kurs-card-content">
+                            <p className="kurs-naziv">{kurs.naziv}</p>
+                            <p className="kurs-instruktor">
+                                <i className="ri-user-fill"></i> {instruktori[String(kurs.instruktor_id)] || 'Nepoznat'}
+                            </p>
 
-        {/* Ovaj div gura cenu i ocenu na dno kartice */}
-        <div className="kurs-meta">
-            <p className="kurs-cena">{kurs.cena} €</p>
-            <div className="kurs-rating">
-                <div className="rating-value">
-                    <span className="average-rating">{(ratings[kurs.id] || 0).toFixed(1)}</span>
-                    <ReactStars
-                        count={5}
-                        value={ratings[kurs.id] || 0}
-                        size={20}
-                        color2="#ffd700"
-                        edit={false}
-                    />
-                </div>
-                <p className="kurs-popularity">
-                    <i className="ri-group-fill"></i> {popularity[kurs.id] || 0} studenata
-                </p>
-            </div>
-        </div>
-    </div>
-</Link>
+                            {/* Ovaj div gura cenu i ocenu na dno kartice */}
+                            <div className="kurs-meta">
+                                <p className="kurs-cena">{kurs.cena} €</p>
+                                <div className="kurs-rating">
+                                    <div className="rating-value">
+                                        <span className="average-rating">{(ratings[kurs.id] || 0).toFixed(1)}</span>
+                                        <ReactStars
+                                            count={5}
+                                            value={ratings[kurs.id] || 0}
+                                            size={20}
+                                            color2="#ffd700"
+                                            edit={false}
+                                        />
+                                    </div>
+                                    <p className="kurs-popularity">
+                                        <i className="ri-group-fill"></i> {popularity[kurs.id] || 0} studenata
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </Link>
                 ))}
             </div>
         </div>

@@ -1,0 +1,248 @@
+/* FAQ.module.css */
+
+.section {
+    padding: 1rem 0;
+    /* NEMA BACKGROUND BOJE/SLIKE - Ostavljamo prozirno */
+    background: transparent;
+    margin-bottom: 2rem;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+/* Naslovi se nasleđuju iz globalnih stilova, ali ih ovde preciziramo */
+.header h2 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: white;
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+}
+
+.header p {
+    color: #888;
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.iconWrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    color: var(--narandzasta);
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
+}
+
+/* --- FAQ LIST --- */
+
+.faqList {
+    max-width: 800px;
+    margin: 0 auto 4rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.faqItem {
+    position: relative;
+    /* Glass efekat */
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faqItem.active {
+    background: rgba(30, 30, 30, 0.8);
+    border-color: rgba(255, 69, 0, 0.5);
+    /* Narandzasti border kad je otvoren */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.questionButton {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.5rem 2rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: white;
+    text-align: left;
+}
+
+.questionContent {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.indexNumber {
+    font-family: 'Orbitron', monospace;
+    /* Tech font za broj */
+    color: var(--narandzasta);
+    opacity: 0.7;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.questionText {
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.4;
+}
+
+/* Ikonica (+ / -) */
+.iconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    color: #a0a0a0;
+    font-size: 1.2rem;
+    transition: all 0.3s;
+    flex-shrink: 0;
+    /* Da se ne spljosti na mobilnom */
+}
+
+.faqItem.active .iconContainer {
+    background: var(--narandzasta);
+    color: white;
+    transform: rotate(180deg);
+}
+
+/* --- ANSWER ANIMATION --- */
+
+.answerWrapper {
+    overflow: hidden;
+}
+
+.answerContent {
+    padding: 0 2rem 2rem 4rem;
+    /* Uvuceno da prati tekst pitanja */
+    color: #b0b0b0;
+    line-height: 1.7;
+    font-size: 1rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: -0.5rem;
+    /* Malo podignemo border */
+    padding-top: 1.5rem;
+}
+
+/* Dekorativni marker u uglu */
+.cornerMarker {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 0%;
+    background: var(--narandzasta);
+    transition: height 0.3s ease;
+}
+
+.faqItem.active .cornerMarker {
+    height: 100%;
+}
+
+.ctaWrapper {
+    text-align: center;
+}
+
+/* --- RESPONSIVE --- */
+
+@media (max-width: 768px) {
+    .questionButton {
+        padding: 1.2rem;
+    }
+
+    .questionContent {
+        gap: 1rem;
+    }
+
+    .indexNumber {
+        display: none;
+        /* Sakrij broj na malom ekranu za vise mesta */
+    }
+
+    .questionText {
+        font-size: 1rem;
+    }
+
+    .answerContent {
+        padding: 0 1.2rem 1.5rem 1.2rem;
+        /* Smanjen padding na mobilnom */
+    }
+}
+
+/* Logos Section - Global styles for shared markup */
+:global(.paket-logos-wrapper) {
+    margin-top: 5rem;
+    padding: 2.5rem;
+    background: white;
+    border-radius: 20px;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+:global(.paket-logos-container) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8rem;
+    /* Large gap representing separation between verification and payment methods */
+    width: 100%;
+    max-width: 1000px;
+}
+
+:global(.logos-group) {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+:global(.logo-img) {
+    height: 45px;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+:global(.logo-img:hover) {
+    transform: scale(1.05);
+}
+
+/* Mobile responsive for logos */
+@media (max-width: 900px) {
+    :global(.paket-logos-container) {
+        gap: 3rem;
+        flex-direction: column;
+    }
+
+    :global(.paket-logos-wrapper) {
+        margin-top: 3rem;
+        padding: 1.5rem;
+    }
+
+    :global(.logo-img) {
+        height: 35px;
+    }
+}

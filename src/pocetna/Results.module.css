@@ -1,0 +1,376 @@
+/* Results.module.css */
+
+.section {
+    position: relative;
+    padding: 120px 0;
+    overflow: hidden;
+    /* Nema background-color jer je u App.css, ali dodajemo overlay */
+}
+
+/* --- AMBIJENT --- */
+
+.gridOverlay {
+    position: absolute;
+    inset: 0;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.ambientLight {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vw;
+    height: 80vw;
+    background: radial-gradient(circle, rgba(255, 69, 0, 0.08) 0%, transparent 70%);
+    filter: blur(100px);
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* --- HEADER --- */
+
+.header {
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 5rem auto;
+    position: relative;
+    z-index: 5;
+}
+
+.badgeWrapper {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.cyberBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: rgba(255, 69, 0, 0.1);
+    border: 1px solid rgba(255, 69, 0, 0.3);
+    border-radius: 30px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--narandzasta, #ff4500);
+    text-transform: uppercase;
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.1);
+}
+
+.blinkingDot {
+    width: 6px; height: 6px;
+    background-color: var(--narandzasta, #ff4500);
+    border-radius: 50%;
+    animation: blink 1.5s infinite;
+}
+
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+.title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.1;
+    color: white;
+    margin-bottom: 1.5rem;
+    letter-spacing: -1px;
+}
+
+.gradientText {
+    background: linear-gradient(135deg, #fff 0%, #ff4500 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 30px rgba(255, 69, 0, 0.3));
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: #b0b0b0;
+    line-height: 1.7;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.highlight {
+    color: white;
+    font-weight: 600;
+    border-bottom: 1px solid var(--narandzasta, #ff4500);
+}
+
+/* --- GRID LAYOUT --- */
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Responsive */
+    gap: 2.5rem;
+    width: 100%;
+    margin-bottom: 4rem;
+    perspective: 2000px; /* Za 3D efekte */
+}
+
+/* --- BRUTAL CARD DESIGN --- */
+
+.cardWrapper {
+    height: 100%;
+    /* Svaka druga kartica je malo spustena na desktopu za "masonry" feel */
+}
+@media (min-width: 1024px) {
+    .cardWrapper:nth-child(even) {
+        transform: translateY(40px);
+    }
+}
+
+.card {
+    position: relative;
+    background: rgba(15, 15, 15, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 1.5rem;
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+    box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    transform-style: preserve-3d;
+}
+
+/* Hover Effect: Lift & Glow */
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    border-color: rgba(255, 69, 0, 0.4);
+    box-shadow: 
+        0 20px 50px -10px rgba(0,0,0,0.7),
+        0 0 30px rgba(255, 69, 0, 0.1);
+    background: rgba(20, 20, 20, 0.8);
+}
+
+/* Holographic Shine Sweep */
+.holographicShine {
+    position: absolute;
+    top: 0; left: -150%;
+    width: 100%; height: 100%;
+    background: linear-gradient(
+        90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.05), 
+        rgba(255, 69, 0, 0.1),
+        rgba(255, 255, 255, 0.05), 
+        transparent
+    );
+    transform: skewX(-20deg);
+    transition: 0.5s;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.card:hover .holographicShine {
+    left: 150%;
+    transition: 0.7s ease-in-out;
+}
+
+/* Card Header */
+.cardHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.statusPill {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0, 255, 136, 0.1);
+    color: #00ff88;
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    border: 1px solid rgba(0, 255, 136, 0.2);
+}
+
+.shieldIcon { font-size: 1rem; }
+
+.iconBox {
+    width: 40px; height: 40px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Image Frame with Scan Effect */
+.imageFrame {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    aspect-ratio: 4/3; /* Održava proporciju */
+}
+
+.proofImage {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.6s ease;
+    filter: brightness(0.9);
+}
+
+.card:hover .proofImage {
+    transform: scale(1.08);
+    filter: brightness(1.1);
+}
+
+/* Laserski skener preko slike */
+.scanLine {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: rgba(255, 69, 0, 0.8);
+    box-shadow: 0 0 10px rgba(255, 69, 0, 0.8);
+    opacity: 0;
+    z-index: 2;
+}
+
+.card:hover .scanLine {
+    animation: scan 1.5s linear infinite;
+    opacity: 1;
+}
+
+@keyframes scan {
+    0% { top: 0%; opacity: 0; }
+    10% { opacity: 1; }
+    90% { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+}
+
+/* Card Footer */
+.cardFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding-top: 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.labelTitle {
+    font-size: 0.85rem;
+    color: #888;
+    margin: 0 0 5px 0;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.verifiedBadge {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.arrowIcon {
+    width: 35px; height: 35px;
+    border-radius: 50%;
+    background: white;
+    color: black;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    transform: rotate(45deg);
+    transition: transform 0.3s;
+}
+
+.card:hover .arrowIcon {
+    transform: rotate(0deg);
+    background: var(--narandzasta, #ff4500);
+    color: white;
+}
+
+/* --- CTA BUTTON (NEON GLOW) --- */
+
+.ctaWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.neonButton {
+    position: relative;
+    padding: 1.2rem 3rem;
+    background: transparent;
+    color: white;
+    font-weight: 800;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    border: 1px solid var(--narandzasta, #ff4500);
+    cursor: pointer;
+    overflow: hidden;
+    transition: 0.3s;
+    /* Tech corners */
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.neonButton:hover {
+    background: var(--narandzasta, #ff4500);
+    box-shadow: 0 0 40px rgba(255, 69, 0, 0.6);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    transform: translateY(-2px);
+}
+
+.btnReflection {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transform: skewX(-20deg);
+    transition: 0.5s;
+}
+
+.neonButton:hover .btnReflection {
+    left: 150%;
+    transition: 0.5s;
+}
+
+/* --- RESPONSIVE --- */
+
+@media (max-width: 768px) {
+    .section {
+        padding: 80px 0;
+    }
+    
+    .grid {
+        grid-template-columns: 1fr; /* Jedna kolona */
+        gap: 2rem;
+        padding: 0 1rem;
+    }
+
+    .cardWrapper:nth-child(even) {
+        transform: none; /* Iskljuci staggered effect na mobilnom */
+    }
+
+    .title {
+        font-size: 2.5rem;
+    }
+
+    .card {
+        padding: 1.2rem;
+    }
+
+    .neonButton {
+        width: 100%;
+    }
+}

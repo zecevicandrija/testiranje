@@ -45,7 +45,9 @@ body::before {
   z-index: -1;       /* Postavlja ga IZA svog ostalog sadržaja */
 
   /* Sve stilove za pozadinu prebacujemo ovde */
-  background-image: url('../src/images/pozadina3.png');
+  /* background-image: url('../src/images/pozadina3.png'); */
+  background-image: url('../src/images/filippozadina.jpg');
+
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;

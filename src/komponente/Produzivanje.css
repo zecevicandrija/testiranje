@@ -1,0 +1,544 @@
+/* Produzivanje.css - LUXURY BRUTALIST REDESIGN */
+
+:root {
+  --produzivanje-orange: #ff4500;
+  --produzivanje-orange-glow: rgba(255, 69, 0, 0.6);
+  --produzivanje-black: #050505;
+  --produzivanje-gray: #1a1a1a;
+  --produzivanje-text: #ffffff;
+  --produzivanje-text-dim: #a0a0a0;
+  --font-heading: 'Inter', sans-serif;
+}
+
+/* Section & Ambience */
+.produzivanje-section {
+  position: relative;
+  padding: 6rem 1rem 8rem;
+  background: transparent;
+  overflow: hidden;
+}
+
+.produzivanje-ambience {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.produzivanje-orb-1 {
+  position: absolute;
+  top: 10%;
+  right: -5%;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.08), transparent 70%);
+  filter: blur(80px);
+}
+
+.produzivanje-orb-2 {
+  position: absolute;
+  bottom: 0%;
+  left: -10%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255, 69, 0, 0.05), transparent 70%);
+  filter: blur(100px);
+}
+
+/* Container */
+.produzivanje-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* Header */
+.produzivanje-header {
+  text-align: center;
+  margin-bottom: 5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.produzivanje-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  color: var(--produzivanje-text);
+  margin-bottom: 1.5rem;
+  letter-spacing: -2px;
+}
+
+.produzivanje-subtitle {
+  font-size: 1.2rem;
+  color: var(--produzivanje-text-dim);
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* Cards Container */
+.produzivanje-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 3rem;
+  padding: 0 1rem;
+  margin-bottom: 4rem;
+}
+
+/* Card */
+.produzivanje-card {
+  background: rgba(15, 15, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.3s ease;
+  padding: 2rem;
+}
+
+.produzivanje-card:hover {
+  border-color: rgba(255, 69, 0, 0.4);
+}
+
+.produzivanje-card.highlight {
+  border-color: rgba(255, 69, 0, 0.3);
+  background: linear-gradient(180deg,
+      rgba(255, 69, 0, 0.03) 0%,
+      rgba(15, 15, 15, 0.8) 40%);
+  transform: scale(1.02);
+}
+
+/* Badge */
+.produzivanje-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: var(--produzivanje-orange);
+  color: white;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.75rem;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  z-index: 10;
+  box-shadow: 0 4px 15px rgba(255, 69, 0, 0.4);
+  letter-spacing: 1px;
+}
+
+/* Card Icon */
+.produzivanje-card-icon {
+  width: 48px;
+  height: 48px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 69, 0, 0.4);
+  color: var(--produzivanje-orange);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* Card Title & Description */
+.produzivanje-card-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  color: white;
+  letter-spacing: -0.5px;
+}
+
+.produzivanje-card-description {
+  font-size: 0.95rem;
+  color: var(--produzivanje-text-dim);
+  margin-bottom: 2rem;
+  line-height: 1.5;
+}
+
+/* Price */
+.produzivanje-card-price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.produzivanje-price-amount {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: white;
+  letter-spacing: -2px;
+  text-shadow: 0 0 30px rgba(255, 255, 255, 0.2);
+}
+
+.produzivanje-price-period {
+  font-size: 1rem;
+  color: var(--produzivanje-text-dim);
+  font-weight: 500;
+}
+
+/* Discounted Price Styles */
+.produzivanje-price-original {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--produzivanje-text-dim);
+  text-decoration: line-through;
+  margin-right: 0.75rem;
+  opacity: 0.7;
+}
+
+.produzivanje-price-discounted {
+  color: #2ecc71 !important;
+  text-shadow: 0 0 30px rgba(46, 204, 113, 0.3) !important;
+}
+
+.produzivanje-savings-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background: rgba(46, 204, 113, 0.15);
+  border: 1px solid #2ecc71;
+  border-radius: 50px;
+  color: #2ecc71;
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+
+/* Duration */
+.produzivanje-duration {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255, 69, 0, 0.1);
+  border-radius: 8px;
+}
+
+.produzivanje-duration .duration-icon {
+  color: var(--produzivanje-orange);
+  font-size: 1.2rem;
+}
+
+.produzivanje-duration span {
+  color: var(--produzivanje-text);
+  font-weight: 600;
+}
+
+/* Features */
+.produzivanje-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2.5rem;
+}
+
+.produzivanje-features li {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  color: #e0e0e0;
+}
+
+.produzivanje-features .feature-icon {
+  color: var(--produzivanje-orange);
+  display: flex;
+  align-items: center;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 0 8px rgba(255, 69, 0, 0.4));
+}
+
+/* Button */
+.produzivanje-button {
+  width: 100%;
+  padding: 1.2rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 800;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  margin-top: auto;
+  background: linear-gradient(135deg, #ff4500, #ff7b00);
+  color: white;
+  box-shadow: 0 10px 30px rgba(255, 69, 0, 0.3);
+}
+
+.produzivanje-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(255, 69, 0, 0.5);
+}
+
+/* User Info Card */
+.produzivanje-user-info {
+  background: rgba(15, 15, 15, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 24px;
+  padding: 2rem;
+  backdrop-filter: blur(20px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  max-width: 600px;
+  margin: 0 auto 3rem auto;
+}
+
+.produzivanje-user-info h3 {
+  color: white;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: 800;
+}
+
+.produzivanje-user-info p {
+  color: var(--produzivanje-text-dim);
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+}
+
+.produzivanje-user-info strong {
+  color: white;
+  font-weight: 600;
+}
+
+.produzivanje-user-info .expiry-info {
+  padding: 1rem;
+  background: rgba(255, 69, 0, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(255, 69, 0, 0.3);
+  color: var(--produzivanje-orange);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .produzivanje-cards {
+    grid-template-columns: 1fr;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+
+  .produzivanje-price-amount {
+    font-size: 3rem;
+  }
+
+  .produzivanje-title {
+    font-size: 2.5rem;
+  }
+}
+
+/* Logos Section */
+.paket-logos-wrapper {
+  margin-top: 5rem;
+  padding: 2.5rem;
+  background: white;
+  border-radius: 20px;
+  display: flex;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.paket-logos-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8rem;
+  /* Large gap representing separation between verification and payment methods */
+  width: 100%;
+  max-width: 1000px;
+}
+
+.logos-group {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.logo-img {
+  height: 45px;
+  object-fit: contain;
+  transition: transform 0.3s ease;
+}
+
+.logo-img:hover {
+  transform: scale(1.05);
+}
+
+/* Mobile responsive for logos */
+@media (max-width: 900px) {
+  .paket-logos-container {
+    gap: 3rem;
+    flex-direction: column;
+  }
+
+  .paket-logos-wrapper {
+    margin-top: 3rem;
+    padding: 1.5rem;
+  }
+
+  .logo-img {
+    height: 35px;
+  }
+}
+
+/* ===== Discount Section ===== */
+.produzivanje-discount-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.produzivanje-discount-section label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #e0e0e0;
+  font-weight: 500;
+  margin-bottom: 0.75rem;
+  font-size: 0.95rem;
+}
+
+.produzivanje-discount-input-group {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.produzivanje-discount-input-group input {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.produzivanje-discount-input-group input::placeholder {
+  color: #666;
+}
+
+.produzivanje-discount-input-group input:focus {
+  outline: none;
+  border-color: var(--produzivanje-orange);
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.produzivanje-apply-discount-btn {
+  padding: 0.875rem 1.5rem;
+  background: rgba(255, 69, 0, 0.15);
+  border: 1px solid var(--produzivanje-orange);
+  border-radius: 10px;
+  color: var(--produzivanje-orange);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.produzivanje-apply-discount-btn:hover:not(:disabled) {
+  background: rgba(255, 69, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+.produzivanje-apply-discount-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.produzivanje-discount-applied-input {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.875rem 1rem;
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid #2ecc71;
+  border-radius: 10px;
+}
+
+.produzivanje-applied-code {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #2ecc71;
+  font-weight: 600;
+}
+
+.produzivanje-remove-discount-btn {
+  padding: 0.5rem 1rem;
+  background: rgba(231, 76, 60, 0.15);
+  border: 1px solid #e74c3c;
+  border-radius: 6px;
+  color: #e74c3c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-left: 10px;
+}
+
+.produzivanje-remove-discount-btn:hover {
+  background: rgba(231, 76, 60, 0.25);
+}
+
+.produzivanje-discount-error {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.75rem;
+  background: rgba(231, 76, 60, 0.1);
+  border: 1px solid #e74c3c;
+  border-radius: 8px;
+  color: #e74c3c;
+  font-size: 0.85rem;
+}
+
+.produzivanje-discount-success {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: rgba(46, 204, 113, 0.1);
+  border: 1px solid #2ecc71;
+  border-radius: 8px;
+  color: #2ecc71;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+/* Mobile responsive for discount section */
+@media (max-width: 640px) {
+  .produzivanje-discount-input-group {
+    flex-direction: column;
+  }
+
+  .produzivanje-apply-discount-btn {
+    width: 100%;
+  }
+}

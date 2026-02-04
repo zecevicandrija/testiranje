@@ -1,0 +1,162 @@
+/* Tos.css - koristi varijable iz tvoje teme */
+:root {
+    --narandzasta: #ff4500;
+    --narandzasta-svetla: #ff6a34;
+    --tamna-kartica-providna: rgba(33, 33, 33, 0.88);
+    --tekst-primarni: #f0f0f0;
+    --tekst-sekundarni: #bfbfbf;
+    --border-boja: rgba(255, 255, 255, 0.06);
+    --border-boja-jaca: rgba(255, 255, 255, 0.12);
+}
+
+/* Osnovno */
+.tos-wrapper {
+    min-height: 100vh;
+    color: var(--tekst-primarni);
+    font-family: "Josefin Sans", sans-serif;
+    padding: 4rem 0;
+}
+
+.tos-container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+/* Hero / naslov */
+.tos-hero {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.tos-hero .section-title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    display: inline-block;
+    position: relative;
+}
+
+.tos-hero .section-title::after {
+    content: '';
+    position: absolute;
+    width: 40%;
+    height: 3px;
+    background: var(--narandzasta);
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+}
+
+.tos-hero .section-subtitle {
+    color: var(--tekst-sekundarni);
+    max-width: 760px;
+    margin: 0.75rem auto 0;
+    line-height: 1.6;
+    font-size: 0.98rem;
+}
+
+/* Kartica sa tekstom */
+.tos-card {
+    background: var(--tamna-kartica-providna);
+    border: 1px solid var(--border-boja);
+    border-radius: 14px;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
+    color: var(--tekst-primarni);
+}
+
+/* Sekcije unutar tos */
+.tos-section + .tos-section {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed var(--border-boja);
+}
+
+.tos-section h2 {
+    font-size: 1.15rem;
+    margin-bottom: 0.6rem;
+    color: white;
+}
+
+.tos-section p, .tos-section li {
+    color: var(--tekst-sekundarni);
+    line-height: 1.7;
+    font-size: 0.98rem;
+    margin: 0.45rem 0;
+}
+
+/* Lista */
+.tos-section ul {
+    padding-left: 1.25rem;
+    margin: 0.35rem 0;
+}
+
+.tos-section li {
+    margin-bottom: 0.5rem;
+}
+
+/* Footer u Tos kartici */
+.tos-footer {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    border-top: 1px solid var(--border-boja);
+    padding-top: 1rem;
+}
+
+.tos-footer a {
+    color: var(--narandzasta);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.small-note {
+    color: var(--tekst-sekundarni);
+    font-size: 0.85rem;
+}
+
+/* Animacija fade-in */
+.fade-in-section {
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.45s ease-out, transform 0.45s ease-out;
+}
+.fade-in-section.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Responsivnost */
+@media (max-width: 768px) {
+    .tos-container {
+        padding: 1.25rem;
+    }
+    .tos-card {
+        padding: 1.25rem;
+        border-radius: 12px;
+    }
+    .tos-hero .section-title {
+        font-size: 1.6rem;
+    }
+    .tos-section h2 {
+        font-size: 1.05rem;
+    }
+    .tos-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 420px) {
+    .tos-hero .section-subtitle {
+        font-size: 0.95rem;
+    }
+    .tos-footer {
+        align-items: center;
+    }
+}

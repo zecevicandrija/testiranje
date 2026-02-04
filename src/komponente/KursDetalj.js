@@ -10,7 +10,7 @@ import Editor from '@monaco-editor/react';
 import Hls from 'hls.js';
 
 if (typeof window !== "undefined" && !window.Hls) {
-  window.Hls = Hls;
+    window.Hls = Hls;
 }
 
 // Preporuka: Zamenite klase sa Remix Icon klasama radi konzistentnosti
@@ -28,9 +28,8 @@ const KursDetalj = () => {
     const [otvorenaLekcija, setOtvorenaLekcija] = useState(null);
     const [wishlisted, setWishlisted] = useState(false);
     const [kupioKurs, setKupioKurs] = useState(false);
-    // UKLONJENO: Stanje za rating više nije potrebno
-    // const [rating, setRating] = useState(0);
     const [completedLessons, setCompletedLessons] = useState(new Set());
+    const [completedLessonsLoaded, setCompletedLessonsLoaded] = useState(false);
     const [quiz, setQuiz] = useState([]);
     const [code, setCode] = useState('// Unesite svoj kod ovde');
     const [language, setLanguage] = useState('javascript');
@@ -42,6 +41,9 @@ const KursDetalj = () => {
     const [searchParams] = useSearchParams();
 
     const imaAktivnuPretplatu = user && user.subscription_expires_at && new Date(user.subscription_expires_at) > new Date();
+
+    // Moved up to be available for hooks
+    const isCourseAccessible = kurs ? (kupioKurs && (!kurs.is_subscription || imaAktivnuPretplatu)) : false;
 
     useEffect(() => {
         const fetchData = async () => {
@@ -57,18 +59,29 @@ const KursDetalj = () => {
                 setSekcije(sekcijeResponse.data);
 
                 // === NOVA, POBOLJŠANA LOGIKA ===
-            const sekcijaIdFromUrl = searchParams.get('sekcija'); // Čitamo ID iz "?sekcija=..."
+                // === NOVA, POBOLJŠANA LOGIKA ===
+                const sekcijaIdFromUrl = searchParams.get('sekcija'); // Čitamo ID iz "?sekcija=..."
 
-            if (sekcijaIdFromUrl) {
-                // Ako postoji ID u URL-u, otvaramo tu sekciju
-                // (pretvaramo u broj za svaki slučaj)
-                setActiveSection(parseInt(sekcijaIdFromUrl, 10));
-            } else if (sekcijeResponse.data.length > 0) {
-                // Ako ne postoji, otvaramo prvu sekciju kao i do sada
-                setActiveSection(sekcijeResponse.data[0].id);
-            }
+                if (sekcijaIdFromUrl) {
+                    // Ako postoji ID u URL-u, otvaramo tu sekciju
+                    const secId = parseInt(sekcijaIdFromUrl, 10);
+                    setActiveSection(secId);
+
+                    // NAPOMENA: Otvaranje lekcije se sada dešava u zasebnom useEffect-u
+                    // koji prati status učitanih lekcija i completedLessons
+                } else if (sekcijeResponse.data.length > 0) {
+                    // Ako ne postoji, otvaramo prvu sekciju kao i do sada
+                    setActiveSection(sekcijeResponse.data[0].id);
+                }
 
                 if (user) {
+                    // Proveri i ažuriraj subscription status
+                    try {
+                        await api.get('/api/subscription/status');
+                    } catch (subscriptionError) {
+                        console.log('Subscription check:', subscriptionError.response?.data);
+                    }
+
                     const kupovinaResponse = await api.get(`/api/kupovina/user/${user.id}`);
                     const purchased = kupovinaResponse.data.some(c => c.id === parseInt(id));
                     setKupioKurs(purchased);
@@ -77,6 +90,7 @@ const KursDetalj = () => {
 
                     const completedResponse = await api.get(`/api/kompletirane_lekcije/user/${user.id}/course/${id}`);
                     setCompletedLessons(new Set(completedResponse.data));
+                    setCompletedLessonsLoaded(true);
 
                     const wishlistResponse = await api.get(`/api/wishlist/check`, {
                         params: { korisnik_id: user.id, kurs_id: id }
@@ -102,27 +116,39 @@ const KursDetalj = () => {
     // UKLONJENO: handleRatingSubmit funkcija više nije potrebna
 
     const handleLessonClick = async (lekcijaId) => {
+        // Provera da li je lekcija dostupna (da li je korisnik kupio kurs i ima aktivnu pretplatu)
         if (!isCourseAccessible) return;
         const lekcija = lekcije.find(l => l.id === lekcijaId);
         if (!lekcija) return;
-    
+
         setOtvorenaLekcija(lekcija);
         setCurrentStreamUrl('');
         setReviewFeedback(null);
-    
+
         if (lekcija.video_url) {
             try {
                 const response = await api.get(`/api/lekcije/${lekcija.id}/stream`);
                 setCurrentStreamUrl(response.data.url);
             } catch (error) {
                 console.error("Greška pri dohvatanju video linka:", error);
-                alert("Nije moguće učitati video.");
-                setCurrentStreamUrl('error');
+
+                // Ako je 403 error - subscription je istekao
+                if (error.response?.status === 403) {
+                    // Ne postavljamo streamUrl - komponenta će prikazati expired poruku
+                    // jer će isCourseAccessible biti false nakon refresh-a user podataka
+                    const errorData = error.response?.data;
+                    alert(errorData?.message || "Vaša pretplata je istekla. Molimo vas da produžite pristup.");
+                    // Osvježi user podatke da bi isCourseAccessible bio tačan
+                    window.location.reload();
+                } else {
+                    alert("Nije moguće učitati video.");
+                    setCurrentStreamUrl('error');
+                }
             }
         }
-    
+
         await fetchQuiz(lekcijaId);
-    
+
         if (lekcija.assignment) {
             setShowEditor(true);
             determineLanguage(lekcija.assignment);
@@ -131,25 +157,67 @@ const KursDetalj = () => {
             setShowEditor(false);
         }
     };
-    
+
+    // NOVA LOGIKA: Automatsko puštanje lekcije kada se izabere sekcija
+    useEffect(() => {
+        const sekcijaIdFromUrl = searchParams.get('sekcija');
+        // Čekamo da se učitaju lekcije i completedLessons pre nego što odlučimo
+        // Takođe proveravamo da li je već otvorena neka lekcija da ne bismo pregazili izbor korisnika
+        if (sekcijaIdFromUrl && lekcije.length > 0 && !otvorenaLekcija && user && completedLessonsLoaded) {
+            const sekcijaId = parseInt(sekcijaIdFromUrl, 10);
+            const lekcijeUSekciji = lekcije.filter(l => l.sekcija_id === sekcijaId);
+
+            if (lekcijeUSekciji.length > 0) {
+                // Nađi prvu lekciju koja NIJE završena
+                const prvaNezavrsena = lekcijeUSekciji.find(l => !completedLessons.has(l.id));
+
+                // Ako su sve završene (prvaNezavrsena je undefined), pusti prvu u sekciji
+                const lekcijaZaPustanje = prvaNezavrsena || lekcijeUSekciji[0];
+
+                if (lekcijaZaPustanje && isCourseAccessible) {
+                    handleLessonClick(lekcijaZaPustanje.id);
+                }
+            }
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [lekcije, completedLessons, completedLessonsLoaded, searchParams, user, isCourseAccessible]);
+
+    // Navigacija između lekcija
+    const handleNextLesson = () => {
+        if (!otvorenaLekcija) return;
+        const currentIndex = lekcije.findIndex(l => l.id === otvorenaLekcija.id);
+        if (currentIndex !== -1 && currentIndex < lekcije.length - 1) {
+            handleLessonClick(lekcije[currentIndex + 1].id);
+        }
+    };
+
+    const handlePrevLesson = () => {
+        if (!otvorenaLekcija) return;
+        const currentIndex = lekcije.findIndex(l => l.id === otvorenaLekcija.id);
+        if (currentIndex > 0) {
+            handleLessonClick(lekcije[currentIndex - 1].id);
+        }
+    };
+
+
 
     const handleCompletionToggle = async (lessonId) => {
         if (!user) return;
-        
+
         const isCompleted = completedLessons.has(lessonId);
         const updatedCompletedLessons = new Set(completedLessons);
-    
+
         try {
             if (isCompleted) {
                 await api.delete('/api/kompletirane_lekcije', {
-                data: {
-                    korisnik_id: user.id,
-                    lekcija_id: lessonId
-                }
-            });
-            // Ako je API poziv uspeo, uklanjamo lekciju iz lokalnog stanja
-            updatedCompletedLessons.delete(lessonId);
-    
+                    data: {
+                        korisnik_id: user.id,
+                        lekcija_id: lessonId
+                    }
+                });
+                // Ako je API poziv uspeo, uklanjamo lekciju iz lokalnog stanja
+                updatedCompletedLessons.delete(lessonId);
+
             } else {
                 await api.post('/api/kompletirane_lekcije', {
                     korisnik_id: user.id,
@@ -163,7 +231,7 @@ const KursDetalj = () => {
             console.error("Greška pri ažuriranju statusa lekcije:", err);
         }
     };
-    
+
     const fetchQuiz = async (lessonId) => {
         try {
             const { data } = await api.get(`/api/kvizovi/lesson/${lessonId}`);
@@ -176,7 +244,7 @@ const KursDetalj = () => {
             setQuiz([]);
         }
     };
-    
+
     const determineLanguage = (assignment) => {
         const text = assignment.toLowerCase();
         if (text.includes('react') || text.includes('jsx')) setLanguage('javascript');
@@ -263,7 +331,37 @@ const KursDetalj = () => {
 
     if (!kurs) return <div className="loading">Učitavanje...</div>;
 
-    const isCourseAccessible = kupioKurs && (!kurs.is_subscription || imaAktivnuPretplatu);
+    if (!kurs) return <div className="loading">Učitavanje...</div>;
+
+    // const isCourseAccessible was moved up
+
+    const renderContentWithLinks = (text) => {
+        if (!text) return null;
+
+        // Regex to match URLs
+        const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+        // Split text by URL
+        const parts = text.split(urlRegex);
+
+        return parts.map((part, index) => {
+            if (part.match(urlRegex)) {
+                return (
+                    <a
+                        key={index}
+                        href={part}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="lesson-link"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {part}
+                    </a>
+                );
+            }
+            return part;
+        });
+    };
 
     return (
         <div className="course-detail-page">
@@ -273,7 +371,7 @@ const KursDetalj = () => {
                     <p className="course-subtitle">{kurs.opis}</p>
                 </div>
             </div>
-    
+
             <div className="course-layout-wrapper">
                 <aside className="sidebar-left">
                     <div className="sidebar-sticky-content">
@@ -305,7 +403,7 @@ const KursDetalj = () => {
                                 </div>
                             )}
                         </div>
-    
+
                         <div className="lessons-list-card">
                             <h4>Sadržaj</h4>
                             {sekcije.map(sekcija => (
@@ -333,17 +431,17 @@ const KursDetalj = () => {
                                                         </div>
                                                         {isCourseAccessible && (
                                                             <label className="custom-checkbox-wrapper" title="Označi kao završeno">
-            <input
-                type="checkbox"
-                checked={completedLessons.has(lekcija.id)}
-                onChange={e => {
-                    e.stopPropagation();
-                    handleCompletionToggle(lekcija.id);
-                }}
-                className="lesson-complete-checkbox" 
-            />
-            <span className="custom-checkmark"></span>
-        </label>
+                                                                <input
+                                                                    type="checkbox"
+                                                                    checked={completedLessons.has(lekcija.id)}
+                                                                    onChange={e => {
+                                                                        e.stopPropagation();
+                                                                        handleCompletionToggle(lekcija.id);
+                                                                    }}
+                                                                    className="lesson-complete-checkbox"
+                                                                />
+                                                                <span className="custom-checkmark"></span>
+                                                            </label>
                                                         )}
                                                     </li>
                                                 ))}
@@ -354,7 +452,7 @@ const KursDetalj = () => {
                         </div>
                     </div>
                 </aside>
-    
+
                 <div className="main-content-right">
                     {!kupioKurs ? (
                         <div className="welcome-card state-cta">
@@ -366,7 +464,7 @@ const KursDetalj = () => {
                         <div className="welcome-card state-expired">
                             <h2>Vaša pretplata je istekla!</h2>
                             <p>Da biste nastavili sa pristupom ovom kursu, molimo Vas da produžite svoju pretplatu.</p>
-                            <button onClick={handleProduziPretplatu} className="btn-purchase large">Produži Pretplatu</button>
+                            <button onClick={() => navigate('/produzivanje')} className="btn-purchase large">Produži Pretplatu</button>
                         </div>
                     ) : !otvorenaLekcija ? (
                         <div className="welcome-card state-info">
@@ -399,7 +497,33 @@ const KursDetalj = () => {
                                             )}
                                         </div>
                                     )}
-                                    <p className="lesson-content-text">{otvorenaLekcija.content}</p>
+
+                                    {/* DUGMAD ZA NAVIGACIJU */}
+                                    <div className="lesson-navigation">
+                                        <button
+                                            className="nav-btn"
+                                            onClick={handlePrevLesson}
+                                            disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) <= 0}
+                                        >
+                                            <i className="ri-arrow-left-s-line"></i> Prethodna
+                                        </button>
+
+                                        <div className="current-lesson-name">
+                                            {otvorenaLekcija.title}
+                                        </div>
+
+                                        <button
+                                            className="nav-btn"
+                                            onClick={handleNextLesson}
+                                            disabled={lekcije.findIndex(l => l.id === otvorenaLekcija.id) >= lekcije.length - 1}
+                                        >
+                                            Sledeca <i className="ri-arrow-right-s-line"></i>
+                                        </button>
+                                    </div>
+
+                                    <div className="lesson-content-text">
+                                        {renderContentWithLinks(otvorenaLekcija.content)}
+                                    </div>
                                 </div>
                             </div>
 
@@ -439,15 +563,15 @@ const KursDetalj = () => {
                                     )}
                                 </div>
                             )}
-                            
+
                             {quiz && quiz.length > 0 && (
                                 <PrikazKviza quizData={quiz} />
                             )}
                         </>
                     )}
                 </div>
-            </div>
-        </div>
+            </div >
+        </div >
     );
 };
 

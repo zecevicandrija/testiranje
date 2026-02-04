@@ -1,353 +1,305 @@
-/* =================================================================== */
-/* KURS DETALJ - CSS (Redizajn - v2)                       */
-/* =================================================================== */
-
-/* --- Varijable za boje ostaju iste --- */
+/* --- GLOBALNE VARIJABLE & RESET --- */
 :root {
-    --primary-color: #ffa500;
-    --primary-color-hover: #ffc24a;
-    --dark-bg: rgba(26, 26, 26, 0.9);
-    --dark-bg-solid: #1a1a1a;
-    --card-border-color: rgba(255, 255, 255, 0.18);
-    --text-primary: #f0f0f0;
-    --text-secondary: #ccc;
-    --text-muted: #888;
+    --primary-orange: #ff4500;
+    --primary-orange-glow: rgba(255, 69, 0, 0.4);
+    --bg-dark: #050505;
+    --bg-card: #0a0a0c;
+    --bg-sidebar: #0f0f11;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --border-glow: rgba(255, 69, 0, 0.3);
+    --text-main: #ffffff;
+    --text-muted: #888888;
 }
 
-/* --- Osnovni stilovi stranice --- */
 .course-detail-page {
-    width: 100%;
-    padding: 2rem 1rem;
-    box-sizing: border-box;
-    margin-top: 20px;
+    color: var(--text-main);
+    min-height: 100vh;
+    padding-bottom: 4rem;
 }
 
-/* --- Zaglavlje kursa (malo suptilnije) --- */
+/* --- HEADER SEKCIJA --- */
 .course-header {
-    background-color: transparent;
-    color: var(--text-primary);
-    padding: 1rem 0;
+    padding: 4rem 0 2rem 0;
+    /* Više paddinga gore zbog navbara */
     text-align: center;
-    margin: 0 auto 2rem auto;
-    max-width: 1600px;
-    border-bottom: 1px solid var(--card-border-color);
+    border-bottom: 1px solid var(--border-subtle);
+    position: relative;
+    overflow: hidden;
+}
+
+.course-header::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary-orange), transparent);
+}
+
+.header-content {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 2;
 }
 
 .course-title-header {
-    font-size: 2.8rem;
-    color: var(--primary-color);
-    margin: 0 0 0.5rem 0;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 1rem;
+    line-height: 1.1;
+    text-transform: uppercase;
+    letter-spacing: -1px;
+    text-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
 }
+
 .course-subtitle {
     font-size: 1.1rem;
-    color: var(--text-secondary);
-    max-width: 800px;
-    margin: 0 auto 0.5rem auto;
-}
-.course-meta-header {
-    font-size: 0.9rem;
     color: var(--text-muted);
+    line-height: 1.6;
 }
 
-/* --- NOVI Glavni layout (dve kolone) --- */
+/* --- MAIN LAYOUT (GRID) --- */
 .course-layout-wrapper {
-    display: flex;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    /* Fiksni sidebar, fluid content */
     gap: 2rem;
     max-width: 1600px;
-    margin: 0 auto;
+    margin: 3rem auto;
+    padding: 0 2rem;
 }
 
-.main-content-right {
-    flex: 3;
-    min-width: 0;
-}
-
+/* --- SIDEBAR (LEVO) --- */
 .sidebar-left {
-    flex: 1;
-    min-width: 340px; /* Malo širi sidebar */
+    position: relative;
 }
 
 .sidebar-sticky-content {
     position: sticky;
-    top: 90px;
-}
-
-/* --- Opšti stil za kartice --- */
-.course-actions-card,
-.lessons-list-card,
-.lesson-player-card,
-.assignment-card,
-.komentari-container,
-.prikaz-kviza-container {
-    background-color: var(--dark-bg);
-    backdrop-filter: blur(10px);
-    padding: 2rem;
-    border-radius: 15px;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    border: 1px solid var(--card-border-color);
-    margin-bottom: 2rem;
-}
-
-/* --- STIL ZA DESNU KOLONU (Glavni Sadržaj) --- */
-
-/* Wrapper za video ili thumbnail */
-.content-display-area {
-    margin-bottom: 2rem;
-    width: 80%;
-}
-
-.lesson-section h5{
-    color: white;
-}
-
-.lesson-section span {
-    color: white;
-}
-
-.lesson-player-card {
-    padding: 0;
-    overflow: hidden; /* Važno za zaobljene ivice */
-}
-.lesson-player-card h3 {
-    padding: 1.5rem 2rem 1rem 2rem;
-    margin: 0;
-    font-size: 1.8rem;
-    color: var(--primary-color);
-}
-.lesson-content-text {
-    padding: 1rem 2rem 1.5rem 2rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
-}
-
-/* === REŠENJE ZA IFRAME POZADINU === */
-.player-wrapper {
-    position: relative;
-    padding-top: 56.25%; /* 16:9 razmera */
-    background-color: #000;
-    overflow: hidden; /* Sakriva delove iframe-a koji prelaze ivice */
-    border-radius: 0; /* Plejer nema radijus, samo kartica */
-}
-.player-wrapper iframe {
-    position: absolute !important;
-  top: 0;
-  left: 0;
-  width: 100% !important;
-  height: 100% !important;
-}
-.player-placeholder {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    color: var(--text-secondary);
-}
-
-/* Stil za thumbnail kada kurs nije kupljen */
-.course-thumbnail-wrapper {
-    position: relative;
-    border-radius: 15px;
+    top: 100px;
+    height: calc(100vh - 120px);
     overflow: hidden;
-}
-.course-thumbnail {
-    width: 100%;
-    height: auto;
-    display: block;
-}
-.thumbnail-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
+    /* Disable outer scroll */
     display: flex;
     flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    padding: 2rem;
-}
-.thumbnail-overlay h3 {
-    color: var(--primary-color);
-    font-size: 2rem;
-    margin: 0;
-}
-.thumbnail-overlay p {
-    font-size: 1.2rem;
-    margin-top: 0.5rem;
+    gap: 1.5rem;
+    padding-right: 0;
 }
 
+/* Custom Scrollbar for lessons-list-card */
+.lessons-list-card::-webkit-scrollbar {
+    width: 4px;
+}
 
-/* --- STIL ZA LEVU KOLONU (Sidebar) --- */
+.lessons-list-card::-webkit-scrollbar-track {
+    background: transparent;
+}
 
-/* Kartica za akcije (kupovina/ocena) */
+.lessons-list-card::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 4px;
+}
+
+/* KARTICA: CENA / PROGRES */
 .course-actions-card {
-    text-align: center;
-    border-left: 3px solid var(--primary-color); /* Naglašavanje */
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
+
 .price-tag {
     font-size: 2.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-/* Dugmad (stilovi ostaju uglavnom isti) */
-.btn { width: 100%; padding: 0.8rem 1rem; border: none; border-radius: 5px; font-size: 1.1rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-.btn-purchase { background-color: var(--primary-color); color: var(--dark-bg-solid); margin-bottom: 0.75rem; }
-.btn-purchase:hover { background-color: var(--primary-color-hover); transform: scale(1.02); }
-.btn-wishlist { background: transparent; color: var(--text-secondary); border: 1px solid #555; }
-.btn-wishlist:hover { background-color: #555; color: var(--text-primary); }
-.rating-section h4 { margin-top: 0; margin-bottom: 1rem; color: var(--text-primary); }
-.rating-section .btn { margin-top: 1rem; }
-
-/* Lista lekcija */
-.lessons-list-card h4 {
-    font-size: 1.5rem;
-    margin-top: 0;
-    margin-bottom: 1.5rem;
-    color: var(--text-primary);
-    border-bottom: 2px solid var(--primary-color);
-    padding-bottom: 0.5rem;
-}
-.section-header { background-color: rgba(255, 255, 255, 0.05); padding: 1rem; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: background-color 0.3s ease; }
-.section-header:hover { background-color: rgba(255, 255, 255, 0.1); }
-.chevron { border: solid var(--text-secondary); border-width: 0 2px 2px 0; display: inline-block; padding: 3px; transform: rotate(45deg); transition: transform 0.3s ease-in-out; }
-.chevron.expanded { transform: rotate(-135deg); }
-.lessons-list { list-style: none; padding: 0 0 0 1rem; margin: 0; }
-.lesson-item { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0.5rem; border-bottom: 1px solid #333; transition: background-color 0.3s, border-left-color 0.3s; border-left: 3px solid transparent; }
-.lesson-item:last-child { border-bottom: none; }
-.lesson-item.disabled { color: var(--text-muted); cursor: not-allowed; opacity: 0.6; }
-.lesson-item:not(.disabled) { cursor: pointer; }
-.lesson-item:not(.disabled):hover { background-color: rgba(255, 165, 0, 0.1); }
-.lesson-item.active { background-color: rgba(255, 165, 0, 0.15); border-left-color: var(--primary-color); color: var(--primary-color-hover); font-weight: bold;}
-.lesson-item-title { display: flex; align-items: center; gap: 0.8rem; }
-.lesson-item-title i { color: var(--primary-color); }
-.lesson-complete-checkbox { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary-color); }
-
-
-/* =================================================================== */
-/* STIL ZA "WELCOME / EXPIRED" KARTICU               */
-/* =================================================================== */
-
-@keyframes fadeInUpCard {
-    from {
-        opacity: 0;
-        transform: translateY(30px) scale(0.98);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
-
-/* --- Osnovni stil kartice --- */
-.welcome-card {
-    background: #1c1c1c;
-    border: 1px solid #2a2a2a;
-    border-radius: 15px;
-    padding: 3rem 2rem;
-    min-height: 450px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    animation: fadeInUpCard 0.6s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-.welcome-card h2 {
-    font-size: 2.2rem;
     font-weight: 700;
+    color: white;
     margin-bottom: 1rem;
-    letter-spacing: 1px;
+    font-family: var(--font-tech);
 }
 
-.welcome-card p {
-    color: #a1a1a6; /* Ista boja kao sekundarni tekst na login stranici */
-    font-size: 1.1rem;
-    max-width: 500px;
-    line-height: 1.6;
-    margin-bottom: 2rem;
-}
-
-/* Stil za dugme, nasleđen od login stranice */
-.welcome-card .btn-purchase.large {
-    padding: 15px 35px;
+.btn-purchase {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-orange);
+    color: white;
     border: none;
-    border-radius: 30px;
-    background: linear-gradient(135deg, #ffd700 0%, #ffaa00 100%);
-    color: #000;
-    font-family: "Josefin Sans", sans-serif;
-    font-size: 1.1rem;
+    border-radius: 6px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
     cursor: pointer;
-    box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
-    transition: all 0.3s ease;
+    transition: all 0.3s;
+    letter-spacing: 1px;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
 }
 
-.welcome-card .btn-purchase.large:hover {
-    transform: scale(1.05);
-    box-shadow: 0 8px 25px rgba(255, 215, 0, 0.5);
+.btn-purchase:hover {
+    background: #ff5e1f;
+    box-shadow: 0 0 20px var(--primary-orange-glow);
+    transform: translateY(-2px);
 }
 
-/* --- Varijacije na osnovu stanja --- */
-
-/* Stanje 1: Informativna poruka (Dobrodošli) */
-.welcome-card.state-info h2 {
-    color: #ffffff;
+/* Widget za Progres */
+.course-progress-widget h4 {
+    margin: 0 0 1rem 0;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    letter-spacing: 1px;
 }
 
-/* Stanje 2: Poziv na akciju (Kupite kurs) */
-.welcome-card.state-cta h2 {
-    color: #ffd700; /* Zlatna boja da privuče pažnju */
-}
-.welcome-card.state-cta {
-    border: 1px solid #ffd700;
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.1);
-}
-
-/* Stanje 3: Upozorenje (Pretplata istekla) */
-.welcome-card.state-expired {
-    border-color: #ff3333; /* Crveni okvir za upozorenje */
-    box-shadow: 0 0 30px rgba(255, 51, 51, 0.15);
+.progres-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: #ccc;
 }
 
-.welcome-card.state-expired h2 {
-    color: #ff3333; /* Crvena boja za naslov */
+.progres-bar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 3px;
+    overflow: hidden;
+    position: relative;
+    margin-bottom: 0.5rem;
 }
 
-.welcome-card.state-expired .btn-purchase.large {
-    background: linear-gradient(135deg, #ff5050 0%, #e74c3c 100%);
-    color: #ffffff;
-    box-shadow: 0 4px 15px rgba(255, 51, 51, 0.3);
+.progres-popunjeno {
+    height: 100%;
+    background: var(--primary-orange);
+    box-shadow: 0 0 10px var(--primary-orange);
+    border-radius: 3px;
+    transition: width 0.5s ease;
 }
 
-.welcome-card.state-expired .btn-purchase.large:hover {
-    box-shadow: 0 8px 25px rgba(255, 51, 51, 0.5);
+.procenti-broj-large {
+    font-size: 2rem;
+    font-weight: 800;
+    color: white;
+    text-align: right;
+    font-family: var(--font-tech);
 }
 
+/* KARTICA: LISTA LEKCIJA */
+.lessons-list-card {
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
 
-/* =================================================================== */
-/* MODERNI CUSTOM CHECKBOX                                             */
-/* =================================================================== */
+    /* Flex item properties */
+    flex: 1;
+    min-height: 0;
+    /* Crucial for nested flex scrolling */
 
-/* 1. Wrapper (labela) koji pozicionira sve */
+    /* Scrolling */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    /* Firefox */
+    scrollbar-color: #333 transparent;
+}
+
+.lessons-list-card h4 {
+    padding: 1.5rem;
+    margin: 0;
+    border-bottom: 1px solid var(--border-subtle);
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Sekcije (Accordion) */
+.lesson-section {
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.section-header {
+    padding: 1rem 1.5rem;
+    margin: 0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: background 0.2s;
+}
+
+.section-header:hover {
+    background: rgba(255, 255, 255, 0.03);
+    color: var(--primary-orange);
+}
+
+.chevron {
+    width: 8px;
+    height: 8px;
+    border-right: 2px solid #666;
+    border-bottom: 2px solid #666;
+    transform: rotate(-45deg);
+    transition: transform 0.3s;
+}
+
+.chevron.expanded {
+    transform: rotate(45deg);
+    border-color: var(--primary-orange);
+}
+
+/* Lista Lekcija */
+.lessons-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.lesson-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 1.5rem;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+    transition: all 0.2s;
+    font-size: 0.9rem;
+    color: #aaa;
+}
+
+.lesson-item:hover {
+    background: rgba(255, 255, 255, 0.02);
+    color: white;
+}
+
+.lesson-item.active {
+    background: linear-gradient(90deg, rgba(255, 69, 0, 0.1) 0%, transparent 100%);
+    border-left-color: var(--primary-orange);
+    color: white;
+}
+
+.lesson-item.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.lesson-item-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Checkbox Styling */
 .custom-checkbox-wrapper {
     position: relative;
-    display: block;
-    width: 22px;
-    height: 22px;
+    width: 18px;
+    height: 18px;
     cursor: pointer;
-    user-select: none; /* Sprečava selektovanje teksta */
 }
 
-/* 2. Sakrivamo originalni, ružni checkbox */
-.custom-checkbox-wrapper .lesson-complete-checkbox {
+.lesson-complete-checkbox {
     position: absolute;
     opacity: 0;
     cursor: pointer;
@@ -355,158 +307,426 @@
     width: 0;
 }
 
-/* 3. Kreiramo naš vizuelni checkbox (kvadratić) */
 .custom-checkmark {
     position: absolute;
     top: 0;
     left: 0;
-    height: 22px;
-    width: 22px;
+    height: 18px;
+    width: 18px;
     background-color: transparent;
-    border: 2px solid var(--text-muted); /* Koristimo postojeću varijablu za sivu boju */
-    border-radius: 6px;
-    transition: all 0.2s ease-in-out;
+    border: 2px solid #555;
+    border-radius: 4px;
+    transition: all 0.2s;
 }
 
-/* 4. Stil kada pređemo mišem preko njega */
 .custom-checkbox-wrapper:hover .custom-checkmark {
-    border-color: var(--primary-color); /* Posvetli u narandžasto */
+    border-color: #888;
 }
 
-/* 5. Stil kada je checkbox čekiran (najvažniji deo) */
-.custom-checkbox-wrapper .lesson-complete-checkbox:checked ~ .custom-checkmark {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
-    transform: scale(1.05); /* Mala animacija za "pop" efekat */
+.lesson-complete-checkbox:checked~.custom-checkmark {
+    background-color: var(--primary-orange);
+    border-color: var(--primary-orange);
 }
 
-/* 6. Kreiramo kvačicu (checkmark) unutar kvadratića */
-.custom-checkmark::after {
+.custom-checkmark:after {
     content: "";
     position: absolute;
-    display: none; /* Sakrivena je po defaultu */
+    display: none;
 }
 
-/* 7. Prikazujemo kvačicu samo kada je checkbox čekiran */
-.custom-checkbox-wrapper .lesson-complete-checkbox:checked ~ .custom-checkmark::after {
+.lesson-complete-checkbox:checked~.custom-checkmark:after {
     display: block;
 }
 
-/* 8. Stilizujemo samu kvačicu */
-.custom-checkbox-wrapper .custom-checkmark::after {
-    left: 7px;
-    top: 3px;
-    width: 6px;
-    height: 12px;
+.custom-checkmark:after {
+    left: 5px;
+    top: 1px;
+    width: 5px;
+    height: 10px;
     border: solid white;
-    border-width: 0 3px 3px 0;
+    border-width: 0 2px 2px 0;
     transform: rotate(45deg);
-    animation: fadeInCheckmark 0.2s ease-in-out;
 }
 
-/* Bonus: Animacija za pojavljivanje kvačice */
-@keyframes fadeInCheckmark {
-    from {
-        opacity: 0;
-        transform: rotate(45deg) scale(0.5);
-    }
-    to {
-        opacity: 1;
-        transform: rotate(45deg) scale(1);
-    }
+/* --- MAIN CONTENT (DESNO) --- */
+.main-content-right {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
 }
 
-
-
-
-
-
-/* --- Responzivni Dizajn --- */
-@media (max-width: 1200px) {
-    .sidebar-left {
-        min-width: 300px; /* Smanjujemo širinu sidebara */
-    }
-    .course-detail-page {
-        padding: 1.5rem;
-    }
+/* Welcome / Info Kartice */
+.welcome-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 4rem 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 400px;
+    box-shadow: inset 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Standardni tableti --- */
-@media (max-width: 992px) {
+.state-cta h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.state-expired h2 {
+    color: #ff3333;
+}
+
+.state-info h2 {
+    color: var(--primary-orange);
+}
+
+.btn-purchase.large {
+    max-width: 300px;
+    margin-top: 2rem;
+    font-size: 1.1rem;
+    padding: 1.2rem;
+}
+
+/* VIDEO PLAYER */
+.lesson-player-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+}
+
+.lesson-player-card h3 {
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    border-left: 4px solid var(--primary-orange);
+    padding-left: 1rem;
+}
+
+.player-wrapper {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    /* 16:9 Aspect Ratio */
+    background: black;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.player-placeholder {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-family: var(--font-tech);
+}
+
+.lesson-content-text {
+    color: #ccc;
+    line-height: 1.8;
+    font-size: 1.05rem;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 8px;
+    white-space: pre-wrap;
+    /* Preserves newlines */
+}
+
+/* Style for links inside content */
+.lesson-link {
+    color: #00e5ff !important;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.lesson-link:hover {
+    color: #fff !important;
+}
+
+/* ASSIGNMENT & CODE EDITOR */
+.assignment-card {
+    background: #121214;
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 2rem;
+}
+
+.assignment-card h3 {
+    color: #00e5ff;
+    /* Cyan boja za zadatke */
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 0;
+}
+
+.assignment-text {
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+}
+
+.code-editor-wrapper {
+    border: 1px solid #333;
+    border-radius: 8px;
+    overflow: hidden;
+    background: #1e1e1e;
+    /* VS Code dark bg */
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1rem;
+    background: #252526;
+    border-bottom: 1px solid #333;
+}
+
+.editor-header h4 {
+    margin: 0;
+    color: #ccc;
+    font-size: 0.9rem;
+}
+
+.editor-header select {
+    background: #333;
+    color: white;
+    border: 1px solid #444;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.editor-actions {
+    padding: 1rem;
+    display: flex;
+    gap: 1rem;
+    background: #252526;
+    border-top: 1px solid #333;
+}
+
+.btn-secondary,
+.btn-primary {
+    padding: 0.8rem 1.5rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.2s;
+}
+
+.btn-secondary {
+    background: #3c3c3c;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #4a4a4a;
+}
+
+.btn-primary {
+    background: #007acc;
+    color: white;
+}
+
+/* VS Code blue */
+.btn-primary:hover {
+    background: #0098ff;
+}
+
+.ai-feedback {
+    background: rgba(0, 229, 255, 0.05);
+    border: 1px solid rgba(0, 229, 255, 0.2);
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+    border-radius: 8px;
+}
+
+.ai-feedback h4 {
+    color: #00e5ff;
+    margin-top: 0;
+}
+
+.ai-feedback pre {
+    white-space: pre-wrap;
+    color: #ddd;
+    font-family: monospace;
+}
+
+/* --- RESPONSIVE --- */
+
+@media (max-width: 1024px) {
     .course-layout-wrapper {
-        flex-direction: column; /* Vraćamo na jednu kolonu */
+        grid-template-columns: 1fr;
+        /* Stack layout */
     }
+
     .sidebar-left {
-        min-width: 100%; /* Sidebar zauzima punu širinu */
-        order: 2; /* Prikazuje se posle glavnog sadržaja */
+        order: 2;
+        /* Sidebar ide ispod videa na tabletu/mobilnom */
     }
-    .main-content-right {
-        order: 1; /* Glavni sadržaj ide prvi */
-    }
+
     .sidebar-sticky-content {
-        position: static; /* Uklanjamo sticky ponašanje */
+        position: relative;
+        top: 0;
+        height: auto;
+        overflow: visible;
+        /* Ensure content isn't clipped when stacked */
     }
-    .course-title-header {
-        font-size: 2.5rem;
+
+    .main-content-right {
+        order: 1;
+    }
+
+    .lessons-list-card {
+        max-height: 500px;
+        /* Limit height when stacked so it doesn't take forever to scroll past */
     }
 }
 
-/* --- Mobilni telefoni (Landscape i veći) --- */
 @media (max-width: 768px) {
-    .course-detail-page {
-        padding: 1rem;
-        margin-top: 10px;
-    }
     .course-header {
-        padding: 1rem 0;
-        text-align: left;
+        padding: 3rem 0 1.5rem 0;
     }
+
     .course-title-header {
         font-size: 2rem;
     }
+
     .course-subtitle {
         font-size: 1rem;
     }
-    .course-actions-card, .lessons-list-card, .lesson-player-card,
-    .assignment-card, .komentari-container, .prikaz-kviza-container {
-        padding: 1.5rem;
-    }
-     .content-display-area {
-        margin: auto;
-        width: 100%;
-    }
-}
 
-@media (max-width: 1024px) {
-    .content-display-area {
-        margin: auto;
-        width: 100%;
+    .course-layout-wrapper {
+        padding: 0 1rem;
+        gap: 1.5rem;
+        margin-top: 2rem;
     }
-}
 
+    .welcome-card {
+        padding: 2rem 1rem;
+        min-height: 300px;
+    }
 
-/* --- Manji mobilni telefoni (Portrait) --- */
-@media (max-width: 480px) {
-    .course-title-header {
-        font-size: 1.8rem;
-    }
-    .price-tag {
-        font-size: 2rem;
-    }
-    .course-actions-card, .lessons-list-card, .lesson-player-card,
-    .assignment-card, .komentari-container, .prikaz-kviza-container {
-        padding: 1rem; /* Još manje paddinga za najuže ekrane */
-    }
-    .lesson-player-card h3 {
-        font-size: 1.5rem;
+    .lesson-player-card {
         padding: 1rem;
     }
-    .lesson-content-text {
-        padding: 0.5rem 1rem 1rem 1rem;
+
+    .lesson-navigation {
+        flex-wrap: wrap;
+        gap: 0.8rem;
     }
-    .content-display-area {
-        margin: auto;
+
+    .current-lesson-name {
+        order: -1;
+        /* Move title to top on smaller screens */
         width: 100%;
+        margin-bottom: 0.5rem;
     }
-    
+
+    .nav-btn {
+        flex: 1;
+        justify-content: center;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .course-title-header {
+        font-size: 1.75rem;
+    }
+
+    .btn-purchase.large {
+        width: 100%;
+        max-width: none;
+    }
+
+    .lesson-item {
+        padding: 10px 1rem;
+    }
+
+    .editor-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .editor-actions {
+        flex-direction: column;
+    }
+
+    .btn-secondary,
+    .btn-primary {
+        width: 100%;
+        text-align: center;
+    }
+}
+
+/* --- LESSON NAVIGATION CONTROLS --- */
+.lesson-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 1.5rem 0;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+}
+
+.nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    background: var(--bg-sidebar);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    color: var(--text-main);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+}
+
+.nav-btn:hover:not(:disabled) {
+    background: var(--primary-orange);
+    border-color: var(--primary-orange);
+    box-shadow: 0 0 15px var(--primary-orange-glow);
+    transform: translateY(-2px);
+}
+
+.nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.nav-btn i {
+    font-size: 1.2rem;
+}
+
+.current-lesson-name {
+    flex: 1;
+    text-align: center;
+    font-weight: 600;
+    color: var(--primary-orange);
+    font-size: 0.95rem;
+    padding: 0 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

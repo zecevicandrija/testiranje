@@ -44,7 +44,7 @@ const SignUpPage = () => {
         adresa,
         telefon,
       });
-      const response = await axios.post("http://localhost:5000/api/korisnici", {
+      const response = await axios.post("https://test-api.zecevicdev.com/api/korisnici", {
         ime,
         prezime,
         email,

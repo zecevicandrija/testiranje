@@ -9,6 +9,7 @@
     "@emotion/styled": "^11.13.0",
     "@monaco-editor/react": "^4.7.0",
     "@mui/material": "^5.16.7",
+    "@paddle/paddle-js": "^1.4.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -18,6 +19,7 @@
     "cors": "^2.8.5",
     "date-fns": "^4.1.0",
     "express": "^4.19.2",
+    "framer-motion": "^12.23.25",
     "hls.js": "^1.6.7",
     "mdb-react-ui-kit": "^8.0.0",
     "mysql": "^2.18.1",
@@ -35,11 +37,12 @@
     "react-scripts": "5.0.1",
     "react-stars": "^2.2.5",
     "remixicon": "^4.3.0",
+    "tus-js-client": "^4.3.1",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "winBuild": "set \"GENERATE_SOURCEMAP=false\" && react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

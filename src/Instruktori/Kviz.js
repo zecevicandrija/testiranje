@@ -19,7 +19,7 @@ const Kviz = () => {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/kursevi/instruktor/${user.id}`);
+                const response = await axios.get(`https://test-api.zecevicdev.com/api/kursevi/instruktor/${user.id}`);
                 setCourses(response.data);
             } catch (error) {
                 console.error('Error fetching courses:', error);
@@ -35,7 +35,7 @@ const Kviz = () => {
     useEffect(() => {
         const fetchLessons = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/lekcije/course/${selectedCourse}`);
+                const response = await axios.get(`https://test-api.zecevicdev.com/api/lekcije/course/${selectedCourse}`);
                 setLessons(response.data);
             } catch (error) {
                 console.error('Error fetching lessons:', error);
@@ -69,10 +69,10 @@ const Kviz = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
+
         try {
             for (const q of questions) {
-                await axios.post('http://localhost:5000/api/kvizovi', {
+                await axios.post('https://test-api.zecevicdev.com/api/kvizovi', {
                     lesson_id: selectedLesson,
                     question: q.question,
                     answers: q.answers,
@@ -89,7 +89,7 @@ const Kviz = () => {
             alert('Error adding quiz');
         }
     };
-    
+
 
     return (
         <div className="kviz-container">

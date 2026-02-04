@@ -1,0 +1,211 @@
+/* Features.module.css */
+
+.section {
+    position: relative;
+    padding: 6rem 0;
+    /* Tamna pozadina ali ne crna, da se razlikuje od Hero sekcije */
+    background: linear-gradient(to bottom, transparent 0%, rgba(10, 10, 10, 0.8) 50%, transparent 100%);
+    overflow: hidden;
+}
+
+/* Suptilna mreza u pozadini samo ove sekcije */
+.bgGrid {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    opacity: 0.5;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.headerWrapper {
+    text-align: center;
+    margin-bottom: 4rem;
+}
+
+/* Naslovi se nasleđuju iz globalnih stilova, ali ih ovde preciziramo */
+.headerWrapper h2 {
+    font-size: clamp(2.5rem, 5vw, 3.5rem);
+    font-weight: 900;
+    color: white;
+    margin-bottom: 1rem;
+    letter-spacing: -1px;
+}
+
+.headerWrapper p {
+    color: #888;
+    font-size: 1.1rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.featuresGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 4rem;
+}
+
+/* --- THE CARD --- */
+
+.featureCard {
+    position: relative;
+    background: rgba(20, 20, 20, 0.6);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 2.5rem 2rem;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    /* Clip-path za tech oblik (odsecen donji desni ugao) */
+    clip-path: polygon(0 0, 100% 0, 100% 85%, 85% 100%, 0 100%);
+}
+
+.featureCard:hover {
+    transform: translateY(-10px);
+    background: rgba(30, 30, 30, 0.8);
+    border-color: rgba(255, 69, 0, 0.3);
+    box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.8);
+}
+
+/* Dekorativni broj (01, 02...) */
+.bgNumber {
+    position: absolute;
+    top: -10px;
+    right: 10px;
+    font-size: 6rem;
+    font-weight: 900;
+    color: rgba(255, 255, 255, 0.03);
+    font-family: "Josefin Sans", sans-serif;
+    z-index: 0;
+    transition: transform 0.4s;
+}
+
+.featureCard:hover .bgNumber {
+    transform: scale(1.1) translateX(-10px);
+    color: rgba(255, 69, 0, 0.05);
+}
+
+/* Tech Corners (Cyberpunk detalji) */
+.cornerTopLeft {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;
+    height: 20px;
+    border-top: 2px solid rgba(255, 255, 255, 0.2);
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+}
+
+.cornerBottomRight {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+    border-right: 2px solid rgba(255, 255, 255, 0.2);
+    transition: 0.3s;
+}
+
+.featureCard:hover .cornerTopLeft,
+.featureCard:hover .cornerBottomRight {
+    border-color: var(--narandzasta);
+    width: 100%;
+    /* Linije se sire na hover */
+    height: 100%;
+    opacity: 0.1;
+}
+
+/* Icon Styling */
+.iconWrapper {
+    position: relative;
+    width: 70px;
+    height: 70px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.2rem;
+    color: var(--narandzasta);
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 69, 0, 0.2);
+    z-index: 1;
+    transition: transform 0.3s;
+}
+
+.featureCard:hover .iconWrapper {
+    transform: scale(1.1) rotate(5deg);
+    background: rgba(255, 69, 0, 0.1);
+    box-shadow: 0 0 20px rgba(255, 69, 0, 0.2);
+}
+
+.title {
+    position: relative;
+    z-index: 1;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 1rem;
+    letter-spacing: 0.5px;
+}
+
+.text {
+    position: relative;
+    z-index: 1;
+    color: #a0a0a0;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+/* --- CTA BUTTON --- */
+
+.ctaWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.ctaButton {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 1rem 3rem;
+    background: transparent;
+    color: var(--narandzasta);
+    border: 1px solid var(--narandzasta);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+}
+
+.ctaButton:hover {
+    background: var(--narandzasta);
+    color: white;
+    box-shadow: 0 0 30px rgba(255, 69, 0, 0.4);
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+
+@media (max-width: 768px) {
+    .featuresGrid {
+        grid-template-columns: 1fr;
+        padding: 0 1rem;
+    }
+
+    .featureCard {
+        padding: 2rem 1.5rem;
+    }
+
+    .bgNumber {
+        font-size: 4rem;
+        top: 0;
+    }
+}

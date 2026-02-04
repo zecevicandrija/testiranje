@@ -2,17 +2,26 @@
 /* OSNOVNE VARIJABLE ZA BOJE            */
 /* ============================================= */
 :root {
-    --primary-color: #4a148c; /* Glavna ljubičasta boja za akcente */
-    --primary-color-hover: #6a1b9a; /* Svetlija za hover efekat */
-    --text-color-dark: #333; /* Tamna boja za tekst */
-    --text-color-light: #f8f9fa; /* Svetla boja za tekst na tamnim pozadinama */
-    --page-background: #ffffff; /* Bela pozadina stranice */
+    --primary-color: #4a148c;
+    /* Glavna ljubičasta boja za akcente */
+    --primary-color-hover: #6a1b9a;
+    /* Svetlija za hover efekat */
+    --text-color-dark: #333;
+    /* Tamna boja za tekst */
+    --text-color-light: #f8f9fa;
+    /* Svetla boja za tekst na tamnim pozadinama */
+    --page-background: #ffffff;
+    /* Bela pozadina stranice */
     /* IZMENA: Pozadina kartice više nije bela, već veoma svetlo siva */
-    --background-card: #f8f9fa; 
-    --border-color: #dee2e6; /* Svetlo siva za ivice */
-    --success-color: #28a745; /* Zelena za uspeh */
-    --error-color: #dc3545; /* Crvena za greške */
-    --disabled-color: #cccccc; /* Siva za onemogućene elemente */
+    --background-card: #f8f9fa;
+    --border-color: #dee2e6;
+    /* Svetlo siva za ivice */
+    --success-color: #28a745;
+    /* Zelena za uspeh */
+    --error-color: #dc3545;
+    /* Crvena za greške */
+    --disabled-color: #cccccc;
+    /* Siva za onemogućene elemente */
 }
 
 /* ============================================= */
@@ -40,17 +49,21 @@
 .add-lekcija-form {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem; /* Razmak između polja */
-    padding: 2.5rem; /* Malo više paddinga za bolji izgled */
+    gap: 1.5rem;
+    /* Razmak između polja */
+    padding: 2.5rem;
+    /* Malo više paddinga za bolji izgled */
     /* IZMENA: Postavljena boja pozadine kartice */
     background-color: var(--background-card);
     border: 1px solid var(--border-color);
-    border-radius: 12px; /* Zaobljenije ivice */
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08); /* Suptilna senka */
+    border-radius: 12px;
+    /* Zaobljenije ivice */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    /* Suptilna senka */
 }
 
 /* Wrapper za svako polje (label + input) */
-.add-lekcija-form > div {
+.add-lekcija-form>div {
     display: flex;
     flex-direction: column;
 }
@@ -72,7 +85,7 @@
     border: 1px solid var(--border-color);
     border-radius: 6px;
     /* IZMENA: Pozadina input polja je sada bela da bi se razlikovala od pozadine kartice */
-    background-color: #ffffff; 
+    background-color: #ffffff;
     transition: border-color 0.3s, box-shadow 0.3s;
     color: var(--text-color-dark);
 }
@@ -87,7 +100,8 @@
 
 .add-lekcija-form textarea {
     min-height: 120px;
-    resize: vertical; /* Dozvoli samo vertikalno menjanje veličine */
+    resize: vertical;
+    /* Dozvoli samo vertikalno menjanje veličine */
 }
 
 .add-lekcija-form select:disabled {
@@ -140,7 +154,8 @@
     border-radius: 6px;
     cursor: pointer;
     transition: background-color 0.3s, transform 0.2s;
-    align-self: flex-start; /* Da se ne rasteže preko cele širine */
+    align-self: flex-start;
+    /* Da se ne rasteže preko cele širine */
     margin-top: 1rem;
 }
 
@@ -162,6 +177,39 @@
     font-weight: 500;
 }
 
+/* ============================================= */
+/* PROGRESS BAR ZA UPLOAD                        */
+/* ============================================= */
+.upload-progress-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.upload-progress-bar {
+    width: 100%;
+    height: 12px;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.upload-progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--primary-color), var(--primary-color-hover));
+    border-radius: 6px;
+    transition: width 0.3s ease;
+}
+
+.upload-status {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+    font-weight: 500;
+    margin: 0;
+    text-align: center;
+}
+
 
 /* ============================================= */
 /* RESPONSIVE DIZAJN            */
@@ -169,7 +217,8 @@
 @media (max-width: 768px) {
     .lekcije-container {
         margin: 1rem;
-        padding: 1.5rem 1rem; /* Smanjen padding na mobilnom */
+        padding: 1.5rem 1rem;
+        /* Smanjen padding na mobilnom */
     }
 
     .lekcijenaslov1 {
@@ -181,7 +230,8 @@
     }
 
     .add-lekcija-form button[type="submit"] {
-        align-self: stretch; /* Rastegni dugme preko cele širine na mobilnom */
+        align-self: stretch;
+        /* Rastegni dugme preko cele širine na mobilnom */
     }
 }
 

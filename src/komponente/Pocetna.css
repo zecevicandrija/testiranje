@@ -1,3 +1,5 @@
+/* src/Pocetna.css */
+
 /* Preporuka: Uključi Remix Icon u tvoj public/index.html za ikonice */
 /* <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet"> */
 
@@ -11,22 +13,19 @@
     --border-boja-jaca: rgba(255, 255, 255, 0.2);
 }
 
-/* NOVI, ISPRAVLJENI KOD ZA ANIMACIJE */
+/* ANIMACIJE */
 .fade-in-section {
-  opacity: 0;
-  transform: scale(0.95); /* Umesto pomeranja, element je blago smanjen */
-  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
 }
 
 .fade-in-section.is-visible {
-  opacity: 1;
-  transform: scale(1); /* Vraćamo ga na originalnu veličinu */
+    opacity: 1;
+    transform: scale(1);
 }
 
-
-
-
-/* IZMENJENO: Vraćena flexbox logika za "lepljivi" footer */
+/* LAYOUT */
 .pocetna-wrapper {
     display: flex;
     flex-direction: column;
@@ -34,24 +33,26 @@
 }
 
 .pocetna-page {
-    flex-grow: 1; /* Omogućava da glavni sadržaj gurne footer na dno */
+    flex-grow: 1;
     color: var(--tekst-primarni);
     font-family: "Josefin Sans", sans-serif;
     overflow-x: hidden;
-    /* Uklonjen je padding-bottom koji je služio za fiksirani footer */
 }
 
+/* CONTAINER (Koristi se kao globalna klasa u svim modulima) */
 .container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 2rem;
 }
 
+/* SECTION (Koristi se kao globalna klasa) */
 .section {
     padding: 6rem 0;
     text-align: center;
 }
 
+/* TYPOGRAPHY UTILS */
 .section-title {
     font-size: 2.5rem;
     font-weight: 700;
@@ -80,58 +81,19 @@
     line-height: 1.6;
 }
 
-/* --- Hero Sekcija --- */
-.hero-section {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    text-align: center;
-    padding: 4rem 0;
-    position: relative;
-}
-
+/* --- Globalni Utility Stilovi --- */
 .bold-white {
-  color: #FFFFFF; /* Postavlja boju teksta na belu */
-  font-weight: bold; /* Osigurava da je tekst boldovan */
+    color: #FFFFFF;
+    font-weight: bold;
 }
 
 .bold-orange-glow {
-  color: #FFFFFF; /* Postavlja boju teksta na belu */
-  font-weight: bold; /* Osigurava da je tekst boldovan */
-  /* Dodaje sjaj (glow) oko teksta: 0 0 je pozicija, 8px je zamućenje, #F97316 je narandžasta boja */
-  text-shadow: 0 0 8px #F97316;
+    color: #FFFFFF;
+    font-weight: bold;
+    text-shadow: 0 0 8px #F97316;
 }
 
-.hero-title {
-    font-size: clamp(2.5rem, 6vw, 4.5rem);
-    font-weight: 700;
-    line-height: 1.1;
-    margin-bottom: 1.5rem;
-    letter-spacing: -2px;
-}
-
-.highlight-text {
-    color: var(--narandzasta);
-    text-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
-}
-
-.hero-subtitle {
-    font-size: 1.2rem;
-    color: var(--tekst-sekundarni);
-    max-width: 700px;
-    margin: 0 auto 2.5rem auto;
-    line-height: 1.6;
-}
-
-.hero-subtitle2 {
-    font-size: 1.2rem;
-    color: var(--tekst-sekundarni);
-    max-width: 700px;
-    margin: 0 auto 0rem auto;
-    line-height: 1.6;
-}
-
-/* --- Dugmad --- */
+/* --- Dugmad (Koriste se svuda) --- */
 .cta-button {
     padding: 1rem 2.5rem;
     border: none;
@@ -165,288 +127,7 @@
     color: white;
 }
 
-/* --- Video --- */
-.hero-video-showcase {
-    max-width: 800px;
-    margin: 0 auto 2.5rem auto;
-    border-radius: 12px;
-    overflow: hidden;
-    position: relative;
-    cursor: pointer;
-    border: 2px solid var(--border-boja);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-}
-.hero-video-showcase:hover {
-    transform: scale(1.03);
-    border-color: var(--narandzasta);
-    box-shadow: 0 0 30px rgba(255, 69, 0, 0.5);
-}
-.video-thumbnail {
-    width: 100%;
-    display: block;
-}
-.video-overlay {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-}
-.video-overlay i {
-    font-size: 5rem;
-    transition: transform 0.3s;
-}
-.hero-video-showcase:hover .video-overlay i {
-    transform: scale(1.1);
-    color: var(--narandzasta);
-}
-
-/* --- Kartice --- */
-.feature-card, .testimonial-card, .accordion-item, .result-card {
-    background: var(--tamna-kartica-providna);
-    backdrop-filter: blur(10px);
-    border: 1px solid var(--border-boja);
-    border-radius: 12px;
-    transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-}
-
-/* Hover efekat za feature i result kartice ostaje sa pomeranjem */
-.feature-card:hover, .result-card:hover {
-    transform: translateY(-10px);
-    border-color: var(--narandzasta);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-}
-
-/* Hover efekat za testimonial kartice NEMA pomeranje */
-.testimonial-card:hover {
-    border-color: rgba(255, 69, 0, 0.7); /* Malo providniji border da se uklopi sa sjajem */
-    box-shadow: 
-        /* Narandžasti sjaj (glow) */
-        0 0 20px rgba(255, 69, 0, 0.5),
-        /* Suptilna tamna senka za dubinu */
-        0 4px 15px rgba(0, 0, 0, 0.2);
-}
-
-
-/* --- Features Sekcija --- */
-.features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2rem;
-    margin-bottom: 3rem;
-}
-.feature-card {
-    padding: 2rem;
-}
-.feature-card i {
-    font-size: 3rem;
-    color: var(--narandzasta);
-    margin-bottom: 1rem;
-}
-.feature-card h3 {
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-}
-.feature-card p {
-    color: var(--tekst-sekundarni);
-    line-height: 1.6;
-}
-
-/* --- Testimonials Sekcija --- */
-.testimonial-carousel-wrapper {
-    position: relative;
-    max-width: 1200px;
-    margin: 0 auto;
-}
-.testimonials-grid-container {
-    overflow: hidden;
-}
-.testimonials-grid {
-    display: flex;
-    transform: translateX(calc(var(--current-index, 0) * -33.333%));
-    transition: transform 0.5s cubic-bezier(0.45, 0, 0.55, 1);
-}
-.testimonial-card-wrapper {
-    flex: 0 0 33.333%;
-    padding: 0 1rem;
-    box-sizing: border-box;
-}
-.testimonial-card {
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    width: 100%;
-}
-.testimonial-text {
-    font-style: italic;
-    color: var(--tekst-sekundarni);
-    flex-grow: 1;
-    line-height: 1.6;
-}
-.testimonial-author {
-    display: flex;
-    align-items: center;
-    margin-top: 1.5rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid var(--border-boja);
-}
-.testimonial-author img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 1rem;
-    object-fit: cover;
-}
-.scroll-arrow {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(30, 30, 30, 0.8);
-    backdrop-filter: blur(5px);
-    border: 1px solid var(--border-boja-jaca);
-    color: var(--tekst-primarni);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    cursor: pointer;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2.5rem;
-    transition: all 0.3s ease;
-    z-index: 10;
-}
-.scroll-arrow:hover:not(:disabled) {
-    background: var(--narandzasta);
-    border-color: var(--narandzasta);
-    transform: translateY(-50%) scale(1.1);
-}
-.scroll-arrow:disabled {
-    opacity: 0.2;
-    cursor: not-allowed;
-    transform: translateY(-50%) scale(0.9);
-}
-.scroll-arrow.prev {
-    left: -25px;
-}
-.scroll-arrow.next {
-    right: -25px;
-}
-
-/* --- Results (Profit) Sekcija --- */
-.results-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-.result-card {
-    padding: 0.5rem;
-    overflow: hidden;
-}
-.result-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    border-radius: 8px;
-}
-
-/* --- FAQ Sekcija --- */
-.faq-accordion {
-    max-width: 800px;
-    margin: 0 auto 3rem auto;
-    text-align: left;
-}
-.accordion-item {
-    margin-bottom: 1rem;
-}
-.accordion-header {
-    width: 100%;
-    background: transparent;
-    border: none;
-    padding: 1.5rem;
-    text-align: left;
-    font-size: 1.2rem;
-    color: var(--tekst-primarni);
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.accordion-chevron {
-    transition: transform 0.3s ease;
-}
-.accordion-chevron.open {
-    transform: rotate(180deg);
-}
-.accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.4s ease-in-out;
-}
-.accordion-content.open {
-    max-height: 200px;
-}
-.accordion-content p {
-    padding: 0 1.5rem 1.5rem 1.5rem;
-    color: var(--tekst-sekundarni);
-    line-height: 1.6;
-    margin: 0;
-}
-
-/* --- Footer (IZMENJENO) --- */
-.footer {
-    /* Uklonjeno 'position: fixed' */
-    border-top: 2px solid var(--border-boja-jaca);
-    padding: 2rem 0;
-    color: var(--tekst-sekundarni);
-    flex-shrink: 0; /* Sprečava da se footer smanji */
-}
-.footer-content {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1.5rem;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 2rem;
-}
-.social-links {
-    display: flex;
-    gap: 1.5rem;
-}
-.social-links a {
-    color: var(--tekst-sekundarni);
-    font-size: 1.8rem;
-    transition: color 0.3s, transform 0.3s;
-}
-.social-links a:hover {
-    color: var(--narandzasta);
-    transform: translateY(-3px);
-}
-
-/* --- Responzivnost --- */
-
-@media (max-width: 1280px) {
-    .scroll-arrow.prev { left: 10px; }
-    .scroll-arrow.next { right: 10px; }
-}
-
-@media (max-width: 1023px) {
-    .testimonials-grid {
-        transform: translateX(calc(var(--current-index, 0) * -50%));
-    }
-    .testimonial-card-wrapper {
-        flex-basis: 50%;
-    }
-}
+/* --- Globalna Responzivnost --- */
 
 @media (max-width: 767px) {
     .section {
@@ -455,60 +136,17 @@
     .section-title {
         font-size: 2rem;
     }
-    .hero-title {
-        line-height: 1.2;
-    }
-    .hero-subtitle, .section-subtitle {
+    .section-subtitle {
         font-size: 1.1rem;
     }
-    .footer {
-        padding: 2rem 0; /* Možemo malo smanjiti padding na mobilnom */
-    }
-    .footer-content {
-        flex-direction: column;
-        justify-content: center;
-        text-align: center;
-        gap: 1rem;
-    }
-    
-    .testimonials-grid {
-        transform: translateX(calc(var(--current-index, 0) * -100%));
-    }
-    .testimonial-card-wrapper {
-        flex-basis: 100%;
-        padding: 0 0.5rem;
-    }
-    .scroll-arrow {
-       width: 40px;
-       height: 40px;
-       font-size: 2rem;
-    }
-    .scroll-arrow.prev { left: 5px; }
-    .scroll-arrow.next { right: 5px; }
 }
 
 @media (max-width: 480px) {
-    .container, .footer-content {
+    .container {
         padding: 0 1rem;
     }
     .cta-button {
         padding: 0.8rem 1.5rem;
         font-size: 1rem;
-    }
-    .results-grid {
-        grid-template-columns: 1fr;
-    }
-    .hero-title {
-        font-size: 2.2rem;
-    }
-
-    .result-card {
-        width: 75%;
-        margin: auto;
-    }
-
-    .feature-card {
-        width: 75%;
-        margin: auto;
     }
 }

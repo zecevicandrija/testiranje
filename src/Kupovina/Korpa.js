@@ -11,13 +11,13 @@ const Korpa = () => {
     const [discountId, setDiscountId] = useState(null);
     const [showRemoveModal, setShowRemoveModal] = useState(false);
     const [courseToRemove, setCourseToRemove] = useState(null);
-    
+
     const navigate = useNavigate();
     const { user } = useAuth();
 
     const fetchCartDetails = useCallback(async () => {
         const storedCart = JSON.parse(localStorage.getItem('cart')) || [];
-        
+
         if (storedCart.length === 0) {
             setCourseDetails([]);
             setTotal(0);
@@ -30,9 +30,9 @@ const Korpa = () => {
                     if (!course.id) return null;
                     try {
                         const [ratingRes, lessonsRes, instructorRes] = await Promise.all([
-                            axios.get(`http://localhost:5000/api/ratings/average/${course.id}`),
-                            axios.get(`http://localhost:5000/api/lekcije/count/${course.id}`),
-                            axios.get(`http://localhost:5000/api/korisnici`) // Fetch all users to find instructor
+                            axios.get(`https://test-api.zecevicdev.com/api/ratings/average/${course.id}`),
+                            axios.get(`https://test-api.zecevicdev.com/api/lekcije/count/${course.id}`),
+                            axios.get(`https://test-api.zecevicdev.com/api/korisnici`) // Fetch all users to find instructor
                         ]);
 
                         const instructors = {};
@@ -57,7 +57,7 @@ const Korpa = () => {
 
             const validDetails = details.filter(Boolean); // Ukloni null vrednosti ako je bilo grešaka
             setCourseDetails(validDetails);
-            
+
             const totalPrice = validDetails.reduce((acc, item) => acc + Number(item.cena || 0), 0);
             setTotal(totalPrice);
 
@@ -80,7 +80,7 @@ const Korpa = () => {
         const updatedCart = courseDetails.filter(item => item.id !== courseToRemove.id);
         setCourseDetails(updatedCart);
         localStorage.setItem('cart', JSON.stringify(updatedCart));
-        
+
         const newTotal = updatedCart.reduce((acc, item) => acc + Number(item.cena || 0), 0);
         setTotal(newTotal);
 
@@ -90,11 +90,11 @@ const Korpa = () => {
 
     const applyDiscount = async () => {
         try {
-            const response = await axios.post('http://localhost:5000/api/popusti/validate', { code: discountCode });
+            const response = await axios.post('https://test-api.zecevicdev.com/api/popusti/validate', { code: discountCode });
             if (response.data.valid) {
                 const discountPercent = response.data.discountPercent;
                 setDiscountId(response.data.discountId);
-                
+
                 const originalTotal = courseDetails.reduce((acc, item) => acc + Number(item.cena || 0), 0);
                 const discountAmount = (originalTotal * discountPercent) / 100;
                 setTotal(originalTotal - discountAmount);
@@ -109,9 +109,14 @@ const Korpa = () => {
     };
 
     const handlePurchase = () => {
-        // Jedina uloga "Kupi" dugmeta je da nas odvede na checkout stranicu
-        // i prosledi joj podatke o kursevima i ukupnoj ceni.
-        navigate('/checkout', { state: { items: courseDetails, total: total } });
+        if (!user) {
+            alert('Morate biti ulogovani da biste kupili kurseve.');
+            navigate('/login');
+            return;
+        }
+
+        // Prenesi kurseve u checkout
+        navigate('/checkout', { state: { items: courseDetails } });
     };
 
     return (

@@ -10,10 +10,10 @@ const Instruktor = () => {
     const [kursevi, setKursevi] = useState([]);
     const [isEditCourseModalOpen, setIsEditCourseModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    
+
     const [editingCourse, setEditingCourse] = useState(null);
     const [courseToDelete, setCourseToDelete] = useState(null);
-    
+
     const [editCourseForm, setEditCourseForm] = useState({ naziv: '', opis: '', cena: '' });
     const [courseImageFile, setCourseImageFile] = useState(null);
 
@@ -22,15 +22,19 @@ const Instruktor = () => {
     const navigate = useNavigate();
 
     const fetchKursevi = useCallback(async () => {
-        if (instructorId) {
+        if (user) {
             try {
-                const response = await api.get(`/api/kursevi/instruktor/${instructorId}`);
+                const endpoint = user.uloga === 'admin'
+                    ? '/api/kursevi'
+                    : `/api/kursevi/instruktor/${instructorId}`;
+
+                const response = await api.get(endpoint);
                 setKursevi(response.data);
             } catch (error) {
                 console.error('Greška pri dohvatanju kurseva:', error);
             }
         }
-    }, [instructorId]);
+    }, [user, instructorId]);
 
     useEffect(() => {
         fetchKursevi();
@@ -55,7 +59,11 @@ const Instruktor = () => {
         formData.append('naziv', editCourseForm.naziv);
         formData.append('opis', editCourseForm.opis);
         formData.append('cena', editCourseForm.cena);
-        formData.append('instruktor_id', instructorId);
+
+        // Ako je admin, zadrži originalnog instruktora. Ako je instruktor, koristi njegov ID.
+        const originalInstructorId = user.uloga === 'admin' ? editingCourse.instruktor_id : instructorId;
+        formData.append('instruktor_id', originalInstructorId);
+
         if (courseImageFile) {
             formData.append('slika', courseImageFile);
         }
@@ -103,7 +111,7 @@ const Instruktor = () => {
                 <h1>Instruktorska Tabla</h1>
                 <p>Dobrodošli, {user?.ime}! Upravljajte svojim kursevima i pratite zaradu.</p>
             </header>
-            
+
             <div className="dashboard-main-content">
                 <div className="dashboard-kursevi-section">
                     <h2 className="section-title">Moji Kursevi</h2>
@@ -150,7 +158,7 @@ const Instruktor = () => {
                     </div>
                 </div>
             )}
-            
+
             {/* Delete Confirmation Modal */}
             {isDeleteModalOpen && courseToDelete && (
                 <div className="modal-overlay">

@@ -73,14 +73,14 @@ const Navbar = () => {
                                 <li className="navbar-item">
                                     <Link to="/kupljenkurs" className="navbar-link" onClick={closeMobileMenu}>LEKCIJE</Link>
                                 </li>
-                                <li className="navbar-item">
+                                {/* <li className="navbar-item">
                                     <Link to="/korpa" className="navbar-link cart-icon" onClick={closeMobileMenu}>
                                         <i className="ri-shopping-cart-2-line"></i>
                                         {cartItemCount > 0 && (
                                             <span className="cart-badge">{cartItemCount}</span>
                                         )}
                                     </Link>
-                                </li>
+                                </li> */}
                                 <li className="navbar-item">
                                     <Link to="/profil" className="navbar-link acc-icon" onClick={closeMobileMenu}>
                                         <i className="ri-account-circle-line"></i>

@@ -6,7 +6,7 @@ import './EditKursa.css';
 const EditKursa = () => {
     const { kursId } = useParams();
     const navigate = useNavigate();
-    
+
     const [course, setCourse] = useState(null);
     const [lessons, setLessons] = useState([]);
     const [sekcije, setSekcije] = useState([]);
@@ -63,7 +63,7 @@ const EditKursa = () => {
             await api.post('/api/sekcije', {
                 kurs_id: kursId,
                 naziv: novaSekcijaNaziv,
-                thumbnail: novaSekcijaThumbnailUrl 
+                thumbnail: novaSekcijaThumbnailUrl
             });
             setNovaSekcijaNaziv('');
             setNovaSekcijaThumbnailUrl('');
@@ -74,7 +74,7 @@ const EditKursa = () => {
             alert("Neuspešno dodavanje sekcije.");
         }
     };
-    
+
     const handleEditSekcijaClick = (sekcija) => {
         setEditingSekcijaId(sekcija.id);
         setNoviNazivSekcije(sekcija.naziv);
@@ -83,7 +83,7 @@ const EditKursa = () => {
 
     const handleSaveSekcija = async (sekcijaId) => {
         try {
-            await api.put(`/api/sekcije/${sekcijaId}`, { 
+            await api.put(`/api/sekcije/${sekcijaId}`, {
                 naziv: noviNazivSekcije,
                 thumbnail: noviThumbnailUrl
             });
@@ -112,7 +112,7 @@ const EditKursa = () => {
         newSekcije.splice(index + direction, 0, movedItem);
         setSekcije(newSekcije);
     };
-    
+
     const handleSaveOrder = async () => {
         const orderedIds = sekcije.map(s => s.id);
         try {
@@ -137,12 +137,12 @@ const EditKursa = () => {
             }
         }
     };
-    
+
     const handleOpenEditModal = (lesson) => {
         setEditingLesson(lesson);
-        setEditForm({ 
-            title: lesson.title, 
-            content: lesson.content, 
+        setEditForm({
+            title: lesson.title,
+            content: lesson.content,
             sekcija_id: lesson.sekcija_id || ''
         });
         setVideoFile(null);
@@ -159,9 +159,12 @@ const EditKursa = () => {
         formData.append('content', editForm.content);
         formData.append('course_id', editingLesson.course_id);
         formData.append('sekcija_id', editForm.sekcija_id);
-        
+
         if (videoFile) {
             formData.append('video', videoFile);
+        } else if (editingLesson.video_url) {
+            // Ako ne šaljemo novi video, šaljemo stari URL da se ne bi obrisao
+            formData.append('video_url', editingLesson.video_url);
         }
 
         try {
@@ -193,7 +196,7 @@ const EditKursa = () => {
                             {editingSekcijaId === sekcija.id ? (
                                 <div className="edit-sekcija-form">
                                     <label>Naziv sekcije:</label>
-                                    <input 
+                                    <input
                                         type="text"
                                         value={noviNazivSekcije}
                                         onChange={(e) => setNoviNazivSekcije(e.target.value)}
@@ -261,7 +264,7 @@ const EditKursa = () => {
                 </div>
             </div>
 
-            <hr className="separator"/>
+            <hr className="separator" />
 
             <h2>Uređivanje Lekcija</h2>
             <div className="lessons-grid">

@@ -12,11 +12,14 @@ import crystal2 from '../icons/crystal2.png';
 import potion from '../icons/potion.png';
 import sword from '../icons/sword.png';
 import krunica from '../icons/krunica.png';
+import { SiBlender } from "react-icons/si";
 
 // Niz sa klasama za ikonice.
 const sectionIcons = [
+    'ri-hand-heart-line',
     keyikonica,    // Ključ (za uvodne koncepte)
     potion,        // Napitak (za osnove)
+    SiBlender,     // Blender sekcija
     wave,          // Zvuk (za audio)
     crystal2,      // Kristal (za vizuelne efekte)
     moneybag,      // Novac (za monetizaciju)
@@ -137,6 +140,8 @@ const KupljenKurs = () => {
                                             <div className="timeline-icon-container">
                                                 {typeof iconClass === 'string' && iconClass.startsWith('ri-') ? (
                                                     <i className={iconClass}></i>
+                                                ) : typeof iconClass === 'function' ? (
+                                                    React.createElement(iconClass)
                                                 ) : (
                                                     <img src={iconClass} alt="ikona" className="timeline-png-icon" />
                                                 )}
@@ -174,11 +179,11 @@ const KupljenKurs = () => {
                 </div>
             )}
             {!isLoading && !isLoadingSekcija && selektovaniKursId && progresPoSekcijama.length === 0 && (
-                 <p style={{textAlign: 'center', marginTop: '2rem'}}>Ovaj kurs trenutno nema definisane sekcije.</p>
+                <p style={{ textAlign: 'center', marginTop: '2rem' }}>Ovaj kurs trenutno nema definisane sekcije.</p>
             )}
 
             {!isLoading && sviKupljeniKursevi.length === 0 && (
-                 <p style={{textAlign: 'center', marginTop: '2rem'}}>Nemate kupljenih kurseva.</p>
+                <p style={{ textAlign: 'center', marginTop: '2rem' }}>Nemate kupljenih kurseva.</p>
             )}
         </div>
     );

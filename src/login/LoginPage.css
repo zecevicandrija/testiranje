@@ -1,217 +1,350 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap');
+/* === PREMIUM LOGIN PAGE === */
 
-/* --- Osnovne promenljive --- */
-:root {
-    --login-narandzasta: #ff4500;
-    --login-tamna-kartica: rgba(26, 26, 26, 0.6); /* Polu-providna za "stakleni" efekat */
-    --login-border-boja: rgba(255, 255, 255, 0.15);
-    --login-tekst-primarni: #f0f0f0;
-    --login-tekst-sekundarni: #a0a0a0;
-    --login-input-bg: #101010;
-    --login-error-crvena: #e53935;
-}
-
-/* --- Glavni kontejner stranice --- */
-.login-page-wrapper {
+/* --- Wrapper --- */
+.lpage-wrapper {
     display: flex;
     align-items: center;
     justify-content: center;
     min-height: 100vh;
     padding: 2rem;
-    font-family: "Josefin Sans", sans-serif;
-    /* Pozadina se nasleđuje od App.css (body::before) */
 }
 
-/* --- Glavna login kartica --- */
-.login-container {
+/* --- Main Container --- */
+.lpage-container {
+    position: relative;
     width: 100%;
-    max-width: 450px;
-    background: var(--login-tamna-kartica);
-    backdrop-filter: blur(15px); /* Stakleni efekat */
-    border: 1px solid var(--login-border-boja);
-    border-radius: 20px;
-    padding: 3rem;
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    animation: fadeIn 0.6s ease-out;
+    max-width: 440px;
+    padding: 2rem 2.5rem 2.5rem;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 165, 0, 0.15);
+    background: rgba(20, 20, 20, 0.85);
+    backdrop-filter: blur(20px);
+    box-shadow:
+        0 25px 80px rgba(0, 0, 0, 0.6),
+        0 0 60px rgba(255, 165, 0, 0.05);
+    overflow: hidden;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
+.lpage-glow {
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 300px;
+    background: radial-gradient(circle, rgba(255, 165, 0, 0.25) 0%, transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
 }
 
-/* --- Header kartice --- */
-.login-card-header {
-    margin-bottom: 2.5rem;
+/* --- Banner --- */
+.lpage-banner-wrapper {
+    position: relative;
+    margin: -2rem -2.5rem 1.5rem;
+    border-radius: 24px 24px 16px 16px;
+    overflow: hidden;
 }
 
-.login-title {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--login-tekst-primarni);
-    margin: 0;
-}
-
-.title-underline {
-    width: 80px;
-    height: 4px;
-    background: var(--login-narandzasta);
-    border-radius: 2px;
-    margin: 1rem auto 0;
-    box-shadow: 0 0 15px rgba(255, 69, 0, 0.5);
-}
-
-/* --- Forma i input polja --- */
-.form-input-group {
-    margin-bottom: 2rem;
-    text-align: left;
-}
-
-.form-input-group label {
+.lpage-banner {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
     display: block;
-    margin-bottom: 0.75rem;
-    color: var(--login-tekst-sekundarni);
-    font-weight: 500;
 }
 
-.input-with-icon {
+.lpage-banner-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom,
+            transparent 0%,
+            transparent 40%,
+            rgba(20, 20, 20, 0.7) 80%,
+            rgba(20, 20, 20, 1) 100%);
+    pointer-events: none;
+}
+
+/* --- Header --- */
+.lpage-header {
+    text-align: center;
+    margin-bottom: 1.75rem;
+    position: relative;
+    z-index: 1;
+}
+
+.lpage-title {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: #fff;
+    margin: 0 0 0.35rem 0;
+    letter-spacing: -0.5px;
+}
+
+.lpage-gradient-text {
+    background: linear-gradient(135deg, #ffa500, #ff6b35);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.lpage-subtitle {
+    margin: 0;
+    color: #888;
+    font-size: 1rem;
+}
+
+/* --- Form --- */
+.lpage-form {
+    position: relative;
+    z-index: 1;
+}
+
+.lpage-input-group {
+    margin-bottom: 1.75rem;
+}
+
+.lpage-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.6rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #b0b0b0;
+}
+
+.lpage-label-icon {
+    font-size: 1rem;
+    color: #ffa500;
+}
+
+.lpage-input-wrapper {
     position: relative;
 }
 
-.input-with-icon i {
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--login-tekst-sekundarni);
-    font-size: 1.2rem;
-    transition: color 0.3s ease;
-}
-
-.input-with-icon input {
+.lpage-input {
     width: 100%;
-    height: 55px;
-    padding: 0 20px 0 50px; /* Mesto za ikonicu */
-    background: var(--login-input-bg);
-    border: 1px solid var(--login-border-boja);
-    border-radius: 10px;
-    color: var(--login-tekst-primarni);
+    padding: 1rem 1.25rem;
     font-size: 1rem;
+    color: #fff;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
     transition: all 0.3s ease;
+    box-sizing: border-box;
 }
 
-.input-with-icon input::placeholder {
+.lpage-input::placeholder {
     color: #555;
 }
 
-/* Fokus efekat za input polja */
-.input-with-icon input:focus {
+.lpage-input:focus {
     outline: none;
-    border-color: var(--login-narandzasta);
-    box-shadow: 0 0 15px rgba(255, 69, 0, 0.4);
+    border-color: #ffa500;
+    background: rgba(0, 0, 0, 0.6);
+    box-shadow: 0 0 0 3px rgba(255, 165, 0, 0.1);
 }
 
-.input-with-icon input:focus + i {
-    color: var(--login-narandzasta);
+.lpage-input-focus-line {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #ffa500, #ff6b35);
+    transition: all 0.3s ease;
+    transform: translateX(-50%);
+    border-radius: 0 0 12px 12px;
 }
 
-/* --- Glavno dugme --- */
-.submit-login-btn {
+.lpage-input:focus~.lpage-input-focus-line {
     width: 100%;
-    padding: 1rem;
+}
+
+/* --- Submit Button --- */
+.lpage-submit-btn {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    width: 100%;
+    padding: 1.15rem 2rem;
+    margin-top: 0.5rem;
     font-size: 1.1rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    color: #fff;
-    background: var(--login-narandzasta);
+    color: #000;
+    background: linear-gradient(135deg, #ffa500, #ff8c00);
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     cursor: pointer;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(255, 165, 0, 0.3);
     transition: all 0.3s ease;
-    box-shadow: 0 5px 20px rgba(255, 69, 0, 0.3);
 }
 
-.submit-login-btn:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 30px rgba(255, 69, 0, 0.5);
+.lpage-submit-btn:hover:not(:disabled) {
+    box-shadow: 0 15px 50px rgba(255, 165, 0, 0.45);
 }
 
-/* --- Modal za greške --- */
-.error-modal-overlay {
+.lpage-submit-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.lpage-btn-icon {
+    font-size: 1.3rem;
+    transition: transform 0.3s ease;
+}
+
+.lpage-submit-btn:hover:not(:disabled) .lpage-btn-icon {
+    transform: translateX(5px);
+}
+
+.lpage-btn-shine {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(45deg,
+            transparent,
+            rgba(255, 255, 255, 0.2),
+            transparent);
+    transform: rotate(45deg);
+    animation: lpage-shine 3s infinite;
+}
+
+@keyframes lpage-shine {
+    0% {
+        transform: translateX(-100%) translateY(-100%) rotate(45deg);
+    }
+
+    100% {
+        transform: translateX(100%) translateY(100%) rotate(45deg);
+    }
+}
+
+/* --- Bottom Accent --- */
+.lpage-bottom-accent {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #ffa500, #ff6b35, #ffa500, transparent);
+    transform-origin: center;
+}
+
+/* --- Error Modal --- */
+.lpage-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    animation: fadeIn 0.3s;
 }
 
-.error-modal-content {
-    background: var(--login-tamna-kartica);
-    border: 1px solid var(--login-border-boja);
-    border-radius: 15px;
-    padding: 2rem;
+.lpage-modal-content {
     width: 90%;
     max-width: 400px;
+    padding: 2.5rem;
+    background: rgba(20, 20, 20, 0.95);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 20px;
     text-align: center;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-    animation: scaleIn 0.3s ease-out;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
 }
 
-@keyframes scaleIn {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
+.lpage-modal-icon-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    margin-bottom: 1.5rem;
+    background: rgba(231, 76, 60, 0.1);
+    border: 2px solid rgba(231, 76, 60, 0.3);
+    border-radius: 50%;
 }
 
-.error-modal-header {
+.lpage-modal-icon {
+    font-size: 2rem;
+    color: #e74c3c;
+}
+
+.lpage-modal-title {
+    margin: 0 0 0.75rem 0;
     font-size: 1.5rem;
     font-weight: 700;
-    color: var(--login-error-crvena);
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--login-border-boja);
-    padding-bottom: 1rem;
+    color: #fff;
 }
 
-.error-modal-body {
-    margin: 1.5rem 0;
-    color: var(--login-tekst-primarni);
+.lpage-modal-text {
+    margin: 0 0 2rem 0;
+    color: #999;
     line-height: 1.6;
 }
 
-.close-error-btn {
+.lpage-modal-btn {
     width: 100%;
-    padding: 0.8rem;
+    padding: 1rem;
     font-size: 1rem;
     font-weight: 700;
     color: #fff;
-    background: var(--login-error-crvena);
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
     border: none;
-    border-radius: 8px;
+    border-radius: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 20px rgba(231, 76, 60, 0.3);
 }
 
-.close-error-btn:hover {
-    background: #c62828;
+.lpage-modal-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(231, 76, 60, 0.4);
 }
 
-/* --- Responzivnost --- */
+/* --- Responsive --- */
 @media (max-width: 576px) {
-    .login-container {
-        padding: 2rem;
+    .lpage-container {
+        padding: 1.5rem 1.5rem 2rem;
+        border-radius: 20px;
     }
-    .login-title {
-        font-size: 2rem;
+
+    .lpage-banner-wrapper {
+        margin: -1.5rem -1.5rem 1.25rem;
     }
-    .form-input-group {
-        margin-bottom: 1.5rem;
+
+    .lpage-banner {
+        height: 110px;
+    }
+
+    .lpage-title {
+        font-size: 1.8rem;
+    }
+
+    .lpage-input-group {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .lpage-feature-badge {
+        font-size: 0.8rem;
+    }
+
+    .lpage-input {
+        padding: 0.9rem 1rem;
+    }
+
+    .lpage-submit-btn {
+        padding: 1rem 1.5rem;
     }
 }
