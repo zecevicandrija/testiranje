@@ -34,8 +34,8 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Email i šifra su obavezni.' });
         }
 
-        // 2. Dohvatamo sve podatke uključujući subscription_expires_at
-        const query = 'SELECT id, ime, prezime, email, sifra, uloga, subscription_expires_at FROM korisnici WHERE email = ?';
+        // 2. Dohvatamo sve podatke uključujući subscription_expires_at i subscription_status
+        const query = 'SELECT id, ime, prezime, email, sifra, uloga, subscription_expires_at, subscription_status FROM korisnici WHERE email = ?';
         const [results] = await db.query(query, [email]);
 
         if (results.length === 0) {
@@ -70,7 +70,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', authMiddleware, async (req, res) => {
     try {
         // req.user.id dolazi iz authMiddleware-a
-        const query = 'SELECT id, ime, prezime, email, uloga, subscription_expires_at FROM korisnici WHERE id = ?';
+        const query = 'SELECT id, ime, prezime, email, uloga, subscription_expires_at, subscription_status FROM korisnici WHERE id = ?';
         const [users] = await db.query(query, [req.user.id]);
 
         if (users.length === 0) {
