@@ -1,4 +1,10 @@
-require('dotenv').config({ path: '../.env' });
+// Pokušaj da učitaš .env varijable, ali ignoriši ako ne uspe (ako su već u environment-u)
+try {
+    const path = require('path');
+    require('dotenv').config({ path: path.join(__dirname, '../.env') });
+} catch (e) {
+    console.log('Note: .env file not loaded or not found, using existing environment variables.');
+}
 const bcrypt = require('bcryptjs');
 const db = require('../db');
 const generateRandomPassword = require('../utils/passwordGenerator');
