@@ -72,12 +72,13 @@ async function checkSubscription(req, res, next) {
         }
 
         // Provera 3: Da li je subscription status aktivan
-        if (user.subscription_status !== 'active') {
+        // 'cancelled' dozvoljava pristup do datuma isteka - samo 'expired' i 'payment_failed' blokiraju
+        if (user.subscription_status === 'expired' || user.subscription_status === 'payment_failed') {
             return res.status(403).json({
                 error: 'Subscription not active',
-                message: `Vaša pretplata nije aktivna (status: ${user.subscription_status}). Kontaktirajte podršku.`,
+                message: `Vaša pretplata nije aktivna (status: ${user.subscription_status}). Molimo obnovite pristup.`,
                 subscriptionStatus: user.subscription_status,
-                redirectTo: '/paket'
+                redirectTo: '/produzivanje'
             });
         }
 
