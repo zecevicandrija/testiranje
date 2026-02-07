@@ -301,7 +301,7 @@ async function sendSubscriptionRenewalEmail(toEmail, firstName, newExpiryDate, a
     `;
 
     await resend.emails.send({
-      from: 'MotionAkademija <office@localhost:3000>',
+      from: 'MotionAkademija <office@motionakademija.com>',
       to: toEmail,
       subject: '✅ Vaša pretplata je produžena!',
       html
@@ -383,7 +383,7 @@ async function sendSubscriptionPaymentFailedEmail(toEmail, firstName) {
     `;
 
     await resend.emails.send({
-      from: 'MotionAkademija <office@localhost:3000>',
+      from: 'MotionAkademija <office@motionakademija.com>',
       to: toEmail,
       subject: '⚠️ Problem sa plaćanjem pretplate',
       html
