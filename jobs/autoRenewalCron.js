@@ -239,7 +239,7 @@ async function runAutoRenewalJob() {
 function startAutoRenewalJob() {
     // Cron format: second minute hour day month weekday
     // '32 15 * * *' = Every day at 15:32 (3:32 PM)
-    const cronSchedule = '51 17 * * *';
+    const cronSchedule = '32 16 * * *';
 
     console.log('🕐 Auto Renewal Cron Job initialized');
     console.log(`   Schedule: Every day at 15:32 (3:32 PM)`);
