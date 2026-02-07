@@ -531,10 +531,13 @@ router.all('/callback-redirect', async (req, res) => {
                             }
                         }
 
-                        // Izračunaj next billing date
+                        // Izračunaj next billing date - treba da bude kada pretplata istekne
+                        // (korisnik je upravo platio za subscriptionMonths, sledeća naplata je nakon tog perioda)
                         const now = new Date();
                         const nextBillingDate = new Date(now);
                         nextBillingDate.setMonth(nextBillingDate.getMonth() + subscriptionMonths);
+                        // NAPOMENA: ovo JE ispravno za INICIJALNU kupovinu jer je nextBillingDate = subscription_expires_at
+                        // tj. korisnik plati danas, pretplata mu traje mesec dana, sledeća naplata je za mesec dana
 
                         // Proveri da li već postoji recurring subscription za ovog korisnika
                         const [existingRecurring] = await db.query(

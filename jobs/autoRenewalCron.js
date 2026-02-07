@@ -94,8 +94,8 @@ async function processRenewal(subscription) {
             );
 
             // Ažuriraj recurring_subscriptions
+            // next_billing_date = datum isteka pretplate (tada će cron job naplatiti)
             const nextBillingDate = new Date(newExpiryDate);
-            nextBillingDate.setMonth(nextBillingDate.getMonth() + subscriptionMonths);
 
             await db.query(
                 `UPDATE recurring_subscriptions 
