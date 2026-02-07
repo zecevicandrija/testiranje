@@ -148,7 +148,7 @@ async function sendMsuWelcomeEmail(toEmail, plainPassword, firstName = 'Korisnik
     `;
 
     await resend.emails.send({
-      from: 'MotionAkademija <office@localhost:3000>',
+      from: 'MotionAkademija <office@motionakademija.com>',
       to: toEmail,
       subject: 'Dobrodošli - Vaš nalog je kreiran!',
       html
