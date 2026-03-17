@@ -10,6 +10,12 @@ const authMiddleware = require('../middleware/token');
 router.get('/korisnik/:korisnikId', authMiddleware, cacheMiddleware(60), async (req, res) => {
     try {
         const korisnikId = req.params.korisnikId;
+
+        // Dozvola samo za vlasnika ili admina
+        if (req.user.uloga !== 'admin' && req.user.id !== parseInt(korisnikId)) {
+            return res.status(403).json({ error: 'Zabranjen pristup. Možete videti samo sopstvene lekcije.' });
+        }
+
         const query = 'SELECT * FROM kompletirane_lekcije WHERE korisnik_id = ?';
         const [results] = await db.query(query, [korisnikId]);
         res.status(200).json(results);
@@ -23,6 +29,11 @@ router.get('/korisnik/:korisnikId', authMiddleware, cacheMiddleware(60), async (
 router.post('/', authMiddleware, validate(completeLekcijaSchema), async (req, res) => {
     try {
         const { korisnik_id, kurs_id, lekcija_id } = req.body;
+
+        // Dozvola samo za vlasnika ili admina
+        if (req.user.uloga !== 'admin' && req.user.id !== parseInt(korisnik_id)) {
+            return res.status(403).json({ error: 'Zabranjen pristup. Možete menjati samo sopstveni progres.' });
+        }
 
         // Provera da li je lekcija već kompletirana da se ne duplira unos
         const checkQuery = 'SELECT id FROM kompletirane_lekcije WHERE korisnik_id = ? AND lekcija_id = ?';
@@ -49,6 +60,11 @@ router.delete('/', authMiddleware, validate(uncompleteLekcijaSchema), async (req
     try {
         const { korisnik_id, lekcija_id } = req.body;
 
+        // Dozvola samo za vlasnika ili admina
+        if (req.user.uloga !== 'admin' && req.user.id !== parseInt(korisnik_id)) {
+            return res.status(403).json({ error: 'Zabranjen pristup. Možete menjati samo sopstveni progres.' });
+        }
+
         const query = 'DELETE FROM kompletirane_lekcije WHERE korisnik_id = ? AND lekcija_id = ?';
         const [results] = await db.query(query, [korisnik_id, lekcija_id]);
 
@@ -70,6 +86,12 @@ router.delete('/', authMiddleware, validate(uncompleteLekcijaSchema), async (req
 router.get('/user/:korisnikId/course/:kursId', authMiddleware, cacheMiddleware(60), async (req, res) => {
     try {
         const { korisnikId, kursId } = req.params;
+
+        // Dozvola samo za vlasnika ili admina
+        if (req.user.uloga !== 'admin' && req.user.id !== parseInt(korisnikId)) {
+            return res.status(403).json({ error: 'Zabranjen pristup. Možete videti samo sopstvene lekcije.' });
+        }
+
         const query = 'SELECT lekcija_id FROM kompletirane_lekcije WHERE korisnik_id = ? AND kurs_id = ?';
         const [results] = await db.query(query, [korisnikId, kursId]);
         // Vraćamo samo niz ID-jeva lekcija radi efikasnosti na frontendu
