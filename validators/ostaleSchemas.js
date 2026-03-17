@@ -108,7 +108,31 @@ const createPopustSchema = z.object({
 
     discountPercent: z.number({ invalid_type_error: 'Popust mora biti broj.' })
         .min(1, 'Popust mora biti najmanje 1%.')
+        .max(100, 'Popust ne sme biti veći od 100%.'),
+
+    datum_isteka: z.string().optional().nullable(),
+    
+    status: z.enum(['aktivan', 'neaktivan']).optional().default('aktivan')
+}).strict();
+
+// =============================================
+// PUT /api/popusti/:id
+// =============================================
+const updatePopustSchema = z.object({
+    code: z.string()
+        .trim()
+        .min(1, 'Kod je obavezan.')
+        .max(50, 'Kod ne sme biti duži od 50 karaktera.')
+        .optional(),
+
+    discountPercent: z.number({ invalid_type_error: 'Popust mora biti broj.' })
+        .min(1, 'Popust mora biti najmanje 1%.')
         .max(100, 'Popust ne sme biti veći od 100%.')
+        .optional(),
+
+    datum_isteka: z.string().optional().nullable(),
+    
+    status: z.enum(['aktivan', 'neaktivan']).optional()
 }).strict();
 
 // =============================================
@@ -238,6 +262,7 @@ module.exports = {
     completeLekcijaSchema,
     uncompleteLekcijaSchema,
     createPopustSchema,
+    updatePopustSchema,
     applyPopustSchema,
     submitKvizSchema,
     createSekcijaSchema,

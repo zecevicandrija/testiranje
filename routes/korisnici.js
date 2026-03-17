@@ -11,7 +11,7 @@ const { createKorisnikSchema, updateKorisnikSchema } = require('../validators/ko
 router.get('/', authMiddleware, requireAdmin, async (req, res) => {
     try {
         // Iz bezbednosnih razloga, nikada ne šaljemo lozinke na frontend
-        const query = 'SELECT id, ime, prezime, email, uloga FROM korisnici';
+        const query = 'SELECT id, ime, prezime, email, uloga, subscription_expires_at, subscription_status FROM korisnici';
         const [results] = await db.query(query);
         res.status(200).json(results);
     } catch (err) {
@@ -56,7 +56,7 @@ router.put('/:id', authMiddleware, validate(updateKorisnikSchema), async (req, r
             return res.status(403).json({ message: 'Nemate dozvolu za ovu akciju. Potrebna je admin uloga ili da ažurirate sopstveni profil.' });
         }
 
-        const { ime, prezime, email, sifra } = req.body;
+        const { ime, prezime, email, sifra, subscription_expires_at, subscription_status } = req.body;
 
         const fieldsToUpdate = {};
 
@@ -64,12 +64,11 @@ router.put('/:id', authMiddleware, validate(updateKorisnikSchema), async (req, r
         if (ime) fieldsToUpdate.ime = ime;
         if (prezime) fieldsToUpdate.prezime = prezime;
         
-        // Email može da menja samo admin
-        if (email) {
-            if (req.user.uloga === 'admin') {
-                fieldsToUpdate.email = email;
-            }
-            // Ukoliko nije admin, pokušaj promene email-a se ignoriše
+        // Email i pretplatu može da menja samo admin
+        if (req.user.uloga === 'admin') {
+            if (email) fieldsToUpdate.email = email;
+            if (subscription_expires_at !== undefined) fieldsToUpdate.subscription_expires_at = subscription_expires_at;
+            if (subscription_status !== undefined) fieldsToUpdate.subscription_status = subscription_status;
         }
         
         // Lozinku hešujemo samo ako je poslata nova
@@ -106,20 +105,34 @@ router.put('/:id', authMiddleware, validate(updateKorisnikSchema), async (req, r
 
 // Endpoint za brisanje korisnika (SAMO ADMIN)
 router.delete('/:id', authMiddleware, requireAdmin, async (req, res) => {
+    const connection = await db.getConnection();
     try {
         const userId = req.params.id;
+        
+        await connection.beginTransaction();
+
+        // Brisanje povezanih podataka prvo
+        await connection.query('DELETE FROM msu_transakcije WHERE korisnik_id = ?', [userId]);
+        await connection.query('DELETE FROM recurring_subscriptions WHERE korisnik_id = ?', [userId]);
+        await connection.query('DELETE FROM kupovina WHERE korisnik_id = ?', [userId]);
+
         const query = 'DELETE FROM korisnici WHERE id = ?';
-        const [results] = await db.query(query, [userId]);
+        const [results] = await connection.query(query, [userId]);
 
         // Proveravamo da li je red uopšte obrisan
         if (results.affectedRows === 0) {
+            await connection.rollback();
             return res.status(404).json({ message: `Korisnik sa ID-jem ${userId} nije pronađen.` });
         }
 
+        await connection.commit();
         res.status(200).json({ message: `Korisnik sa ID-jem ${userId} uspešno obrisan.` });
     } catch (err) {
+        await connection.rollback();
         console.error('Database error:', err);
         res.status(500).json({ error: 'Greška na serveru' });
+    } finally {
+        connection.release();
     }
 });
 
