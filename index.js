@@ -14,8 +14,7 @@ const kurseviRouter = require('./routes/kursevi');
 const lekcijeRouter = require('./routes/lekcije');
 
 const kupovinaRouter = require('./routes/kupovina');
-const ratingsRouter = require('./routes/ratings');
-const komentariRouter = require('./routes/komentari');
+// Routes removed (ratings, comments)
 const kompletirane_lekcijeRouter = require('./routes/kompletirane_lekcije');
 const popustiRouter = require('./routes/popusti');
 const rezultatiKvizaRouter = require('./routes/rezultati_kviza');
@@ -69,8 +68,7 @@ app.use('/api/kursevi', kurseviRouter);
 app.use('/api/lekcije', lekcijeRouter);
 
 app.use('/api/kupovina', kupovinaRouter);
-app.use('/api/ratings', ratingsRouter);
-app.use('/api/komentari', komentariRouter);
+// API routes removed (ratings, comments)
 app.use('/api/kompletirane_lekcije', kompletirane_lekcijeRouter);
 app.use('/api/popusti', popustiRouter);
 app.use('/api/rezultati_kviza', rezultatiKvizaRouter);

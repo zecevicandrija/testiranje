@@ -4,9 +4,10 @@ const db = require('../db');
 const { cacheMiddleware, invalidateCache } = require('../middleware/cacheMiddleware');
 const { validate } = require('../middleware/validate');
 const { completeLekcijaSchema, uncompleteLekcijaSchema } = require('../validators/ostaleSchemas');
+const authMiddleware = require('../middleware/token');
 
 // Endpoint za dobavljanje završenih lekcija po korisniku (keširano 60s)
-router.get('/korisnik/:korisnikId', cacheMiddleware(60), async (req, res) => {
+router.get('/korisnik/:korisnikId', authMiddleware, cacheMiddleware(60), async (req, res) => {
     try {
         const korisnikId = req.params.korisnikId;
         const query = 'SELECT * FROM kompletirane_lekcije WHERE korisnik_id = ?';
@@ -19,7 +20,7 @@ router.get('/korisnik/:korisnikId', cacheMiddleware(60), async (req, res) => {
 });
 
 // Endpoint za dodavanje nove završenog lekcije
-router.post('/', validate(completeLekcijaSchema), async (req, res) => {
+router.post('/', authMiddleware, validate(completeLekcijaSchema), async (req, res) => {
     try {
         const { korisnik_id, kurs_id, lekcija_id } = req.body;
 
@@ -44,7 +45,7 @@ router.post('/', validate(completeLekcijaSchema), async (req, res) => {
 
 // === NOVA RUTA ZA BRISANJE (UN-CHECK) ===
 // Briše zapis na osnovu korisnika i lekcije
-router.delete('/', validate(uncompleteLekcijaSchema), async (req, res) => {
+router.delete('/', authMiddleware, validate(uncompleteLekcijaSchema), async (req, res) => {
     try {
         const { korisnik_id, lekcija_id } = req.body;
 
@@ -66,7 +67,7 @@ router.delete('/', validate(uncompleteLekcijaSchema), async (req, res) => {
 });
 
 // Endpoint za dobavljanje završenih lekcija po korisniku i kursu (keširano 60s)
-router.get('/user/:korisnikId/course/:kursId', cacheMiddleware(60), async (req, res) => {
+router.get('/user/:korisnikId/course/:kursId', authMiddleware, cacheMiddleware(60), async (req, res) => {
     try {
         const { korisnikId, kursId } = req.params;
         const query = 'SELECT lekcija_id FROM kompletirane_lekcije WHERE korisnik_id = ? AND kurs_id = ?';
