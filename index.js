@@ -37,7 +37,8 @@ app.set('trust proxy', 1);
 const allowedOrigins = [
     'https://test-api.zecevicdev.com',
     'https://localhost:5000',
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://testakademija.netlify.app'
 ];
 app.use(cors({ origin: allowedOrigins, credentials: true }));
 
